@@ -7,6 +7,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ckroetsch.imfeelinghungry.onboarding.FoodSelection
+import ckroetsch.imfeelinghungry.onboarding.RestaurantSelection
 
 @Composable
 fun AppNavigation() {
@@ -32,7 +34,7 @@ fun FoodScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    Text(text = "Food")
+    FoodSelection()
 }
 
 @Composable
@@ -40,5 +42,5 @@ fun RestaurantScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    Text(text = "Restaurant")
+    RestaurantSelection()
 }

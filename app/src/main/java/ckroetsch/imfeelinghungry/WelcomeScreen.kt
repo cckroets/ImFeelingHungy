@@ -15,15 +15,15 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun WelcomeScreen(
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     navController: NavController,
-    //onContinueClicked: () -> Unit
 ) {
     Column(
-        modifier.fillMaxSize()
+        modifier
+            .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Button(onClick = {
             navController.navigate("restaurant")
         }) {

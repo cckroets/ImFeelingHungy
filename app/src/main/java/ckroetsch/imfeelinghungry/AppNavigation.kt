@@ -9,9 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AppNavigation(){
+fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination ="welcome") {
+    NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") { WelcomeScreen(navController = navController) }
         composable("restaurant") { RestaurantScreen(navController = navController) }
         composable("food") { FoodScreen(navController = navController) }
@@ -24,7 +24,7 @@ fun DietaryPreferenceScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-Text(text = "Dietary Preference")
+    Text(text = "Dietary Preference")
 }
 
 @Composable
@@ -32,12 +32,12 @@ fun FoodScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-Text(text = "Food")
+    Text(text = "Food")
 }
 
 @Composable
 fun RestaurantScreen(
-    modifier: Modifier =  Modifier,
+    modifier: Modifier = Modifier,
     navController: NavController
 ) {
     Text(text = "Restaurant")

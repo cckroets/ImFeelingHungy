@@ -5,6 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -12,6 +20,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +49,7 @@ data class Food(
     @DrawableRes val icon: Int,
 )
 
-data class FoodPreference(
+data class Diet(
     val name: String,
     val imageUrl: String,
 )
@@ -63,21 +80,21 @@ val AllFoods = listOf(
 )
 
 val AllPreferences = listOf(
-    FoodPreference("High Protein", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("High Fiber", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("High Iron", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Vegan", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Vegetarian", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Keto", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Gluten Free", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Dairy Free", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Paleo", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Pescatarian", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Low Carb", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Low Fat", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Low Calorie", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Low Sugar", "https://www.logodesign.net/images/nature-logo.png"),
-    FoodPreference("Low Sodium", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("High Protein", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("High Fiber", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("High Iron", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Vegan", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Vegetarian", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Keto", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Gluten Free", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Dairy Free", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Paleo", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Pescatarian", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Low Carb", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Low Fat", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Low Calorie", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Low Sugar", "https://www.logodesign.net/images/nature-logo.png"),
+    Diet("Low Sodium", "https://www.logodesign.net/images/nature-logo.png"),
 )
 
 
@@ -154,6 +171,49 @@ fun FoodSelection() {
         items(AllFoods) { food ->
             FoodCard(food)
         }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun DietaryPreferenceSelection() {
+    FlowRow(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        AllPreferences.forEach { preference ->
+            key(preference.name) {
+                var isSelected by remember { mutableStateOf(false) }
+                DietaryPreferencePill(preference, isSelected, { isSelected = it }, Modifier.padding(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun DietaryPreferencePill(
+    preference: Diet,
+    isSelected: Boolean,
+    select: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val color = if (isSelected) Color.Green else Color.Gray
+    val icon = if (isSelected) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .clip(RoundedCornerShape(50))
+            .clickable { select(!isSelected) }
+            .background(color, RoundedCornerShape(50))
+            .padding(16.dp)
+
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = preference.name)
     }
 }
 

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "ckreotsch.imfeelinghungry";
+option java_multiple_files = true;
+
+message UserPreferences {
+  map<string, Preference> restaurants = 1;
+  map<string, Preference> foods = 2;
+  map<string, Preference> diets = 3;
+}
+
+enum Preference{
+  NONE = 0;
+  LIKED = 1;
+  DISLIKED = 2;
+}
+

@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -145,13 +148,15 @@ val AllRestaurants = listOf(
 )
 
 @Composable
-fun RestaurantSelection() {
+fun RestaurantSelection(
+    modifier: Modifier = Modifier
+) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(128.dp),
         contentPadding = PaddingValues(16.dp),
         verticalItemSpacing = 16.dp,
         horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxWidth()
     ) {
         items(AllRestaurants) { restaurant ->
             RestaurantCard(restaurant)
@@ -160,26 +165,31 @@ fun RestaurantSelection() {
 }
 
 @Composable
-fun FoodSelection() {
+fun FoodSelection(
+    modifier: Modifier = Modifier
+) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(128.dp),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(10.dp),
         verticalItemSpacing = 16.dp,
         horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxWidth()
     ) {
         items(AllFoods) { food ->
             FoodCard(food)
         }
+
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DietaryPreferenceSelection() {
+fun DietaryPreferenceSelection(
+    modifier: Modifier = Modifier
+) {
     FlowRow(
         horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxWidth()
     ) {
         AllPreferences.forEach { preference ->
             key(preference.name) {

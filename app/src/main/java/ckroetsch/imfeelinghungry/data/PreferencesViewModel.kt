@@ -9,6 +9,7 @@ import ckroetsch.imfeelinghungry.RESTAURANT_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.dataStore
 import ckroetsch.imfeelinghungry.getPreferences
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
+import androidx.compose.runtime.mutableStateMapOf
 import ckroetsch.imfeelinghungry.onboarding.Diet
 import ckroetsch.imfeelinghungry.onboarding.Food
 import ckroetsch.imfeelinghungry.onboarding.Restaurant
@@ -29,9 +30,9 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     private val dataStore = application.dataStore
 
     // TODO: Store this data in DataStore
-    val dietaryPreferences = mutableMapOf<String, Preference>()
-    val foodPreferences = mutableMapOf<String, Preference>()
-    val restaurantPreferences = mutableMapOf<String, Preference>()
+    val dietaryPreferences = mutableStateMapOf<String, Preference>()
+    val foodPreferences = mutableStateMapOf<String, Preference>()
+    val restaurantPreferences = mutableStateMapOf<String, Preference>()
 
     init {
         viewModelScope.launch {
@@ -75,6 +76,4 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     suspend fun isDataStoreEmpty(): Boolean {
         return isDataStoreEmpty(dataStore)
     }
-
-
 }

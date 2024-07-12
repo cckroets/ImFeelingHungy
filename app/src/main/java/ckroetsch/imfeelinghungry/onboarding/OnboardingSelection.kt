@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -149,7 +148,10 @@ val AllRestaurants = listOf(
 
 @Composable
 fun RestaurantSelection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSelect: (Restaurant) -> Unit,
+    restaurants : List<Restaurant> = AllRestaurants,
+    isSelected: (Restaurant) -> Boolean
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(128.dp),
@@ -158,15 +160,18 @@ fun RestaurantSelection(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier.fillMaxWidth()
     ) {
-        items(AllRestaurants) { restaurant ->
-            RestaurantCard(restaurant)
+        items(restaurants) { restaurant ->
+            RestaurantCard(restaurant, isSelected(restaurant), { onSelect(restaurant) })
         }
     }
 }
 
 @Composable
 fun FoodSelection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSelect: (Food) -> Unit,
+    foods : List<Food> = AllFoods,
+    isSelected: (Food) -> Boolean
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(128.dp),
@@ -175,8 +180,8 @@ fun FoodSelection(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier.fillMaxWidth()
     ) {
-        items(AllFoods) { food ->
-            FoodCard(food)
+        items(foods) { food ->
+            FoodCard(food, isSelected(food), { onSelect(food) })
         }
 
     }
@@ -185,16 +190,23 @@ fun FoodSelection(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DietaryPreferenceSelection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSelect: (Diet) -> Unit,
+    diets : List<Diet> = AllPreferences,
+    isSelected: (Diet) -> Boolean
 ) {
     FlowRow(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.fillMaxWidth()
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize()
     ) {
-        AllPreferences.forEach { preference ->
-            key(preference.name) {
-                var isSelected by remember { mutableStateOf(false) }
-                DietaryPreferencePill(preference, isSelected, { isSelected = it }, Modifier.padding(16.dp))
+        diets.forEach { preference ->
+            key(preference) {
+                DietaryPreferencePill(
+                    preference,
+                    isSelected(preference),
+                    { onSelect(preference) },
+                )
             }
         }
     }
@@ -228,21 +240,46 @@ fun DietaryPreferencePill(
 }
 
 @Composable
-fun FoodCard(food: Food) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun FoodCard(
+    food: Food,
+    isSelected: Boolean,
+    select: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Icon(
             painter = painterResource(food.icon),
             contentDescription = food.name,
             tint = Color.Unspecified,
-            modifier = Modifier.clip(CircleShape)
+            modifier = Modifier.clip(CircleShape).clickable { select(!isSelected) }.border(
+                width = 4.dp,
+                color = if (isSelected) Color.Green else Color.Transparent,
+                shape = CircleShape
+            )
         )
         Text(text = food.name, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
 }
 
 @Composable
-fun RestaurantCard(restaurant: Restaurant) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun RestaurantCard(
+    restaurant: Restaurant,
+    isSelected: Boolean,
+    select: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Add outline to Column when selected
+    Column(
+        modifier = modifier.border(
+            width = 2.dp,
+            color = if (isSelected) Color.Green else Color.Transparent,
+            shape = CircleShape
+        ).clickable { select(!isSelected) },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         AsyncImage(
             model = restaurant.imageUrl,
             contentDescription = restaurant.name,

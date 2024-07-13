@@ -7,13 +7,14 @@ import ckroetsch.imfeelinghungry.DIETARY_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.FOOD_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.RESTAURANT_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.dataStore
-import ckroetsch.imfeelinghungry.getPreferences
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
 import androidx.compose.runtime.mutableStateMapOf
 import ckroetsch.imfeelinghungry.onboarding.Diet
 import ckroetsch.imfeelinghungry.onboarding.Food
 import ckroetsch.imfeelinghungry.onboarding.Restaurant
 import ckroetsch.imfeelinghungry.savePreferences
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -22,6 +23,13 @@ enum class Preference {
     LIKED,
     DISLIKED,
     DEFAULT
+}
+
+private fun String.toPrefsMap(): Map<String, Preference> {
+    return this.split(",").associate {
+        val (name, preference) = it.split(":")
+        name to Preference.valueOf(preference)
+    }
 }
 
 
@@ -36,15 +44,17 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
 
     init {
         viewModelScope.launch {
-            getPreferences(dataStore, DIETARY_PREFERENCES_KEY).collect {
-                dietaryPreferences.putAll(it)
-            }
-            getPreferences(dataStore, FOOD_PREFERENCES_KEY).collect {
-                foodPreferences.putAll(it)
-            }
-            getPreferences(dataStore, RESTAURANT_PREFERENCES_KEY).collect {
-                restaurantPreferences.putAll(it)
-            }
+            dataStore.data.onEach { preferences ->
+                preferences[DIETARY_PREFERENCES_KEY]?.toPrefsMap()?.let {
+                    dietaryPreferences.putAll(it)
+                }
+                preferences[FOOD_PREFERENCES_KEY]?.toPrefsMap()?.let {
+                    foodPreferences.putAll(it)
+                }
+                preferences[RESTAURANT_PREFERENCES_KEY]?.toPrefsMap()?.let {
+                    restaurantPreferences.putAll(it)
+                }
+            }.collect()
         }
     }
 

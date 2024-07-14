@@ -1,5 +1,6 @@
 package ckroetsch.imfeelinghungry.data
 
+import android.content.Context
 import android.content.res.AssetManager
 import android.util.Log
 import com.google.firebase.Firebase
@@ -15,6 +16,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToStream
+import kotlinx.serialization.json.internal.writeJson
+import java.io.File
 
 sealed class Result<out T> {
     data class Success<T>(
@@ -29,6 +33,7 @@ sealed class Result<out T> {
 }
 
 class GenerativeChef(
+    private val context: Context,
     private val assets: AssetManager,
     private val userPreferences: UserPreferences
 ) {
@@ -77,8 +82,14 @@ class GenerativeChef(
                     .removePrefix("```json\n")
                     .removeSuffix("\n```")
                     .let {
+
+
                         try {
                             val item = json.decodeFromString<MenuItem>(it)
+                            with(context.openFileOutput("menu_item_${it.hashCode()}.json", Context.MODE_PRIVATE)) {
+                                json.encodeToStream(MenuItem.serializer(), item, this)
+                                close()
+                            }
                             Result.Success(item)
                         } catch (e: Exception) {
                             Log.e("GenerativeChef", "Failed to parse JSON", e)

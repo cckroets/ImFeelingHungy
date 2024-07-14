@@ -27,6 +27,7 @@ data class Reason(
 data class NutritionalInformation(
     val estimated: Boolean,
     val calories: Int?,
+    val caloriesFromFat: Int?,
     val carbohydrateContent: Double?,
     val cholesterolContent: Double?,
     val fatContent: Double?,
@@ -35,14 +36,15 @@ data class NutritionalInformation(
     val saturatedFatContent: Double?,
     val sodiumContent: Double?,
     val sugarContent: Double?,
-    val transFatContent: Double?,
-    val unsaturatedFatContent: Double?
+    val transFatContent: Double?
 )
 
 // MenuCustomization nested data class
 @Serializable
 data class MenuCustomization(
     val type: String,
-    val description: String,
+    val ingredient: String,
+    val reason: String?,
+    val substituted: String?,
     val nutritionDifference: NutritionalInformation?
 )

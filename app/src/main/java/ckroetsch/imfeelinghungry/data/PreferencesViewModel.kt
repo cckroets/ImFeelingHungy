@@ -28,7 +28,7 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
 
     private val dataStore = application.dataStore
     val preferences = UserPreferences(viewModelScope, dataStore)
-    private val chef = GenerativeChef(application.assets, preferences)
+    private val chef = GenerativeChef(application, application.assets, preferences)
 
     private val item by lazy {
         chef.generateMenuItem()

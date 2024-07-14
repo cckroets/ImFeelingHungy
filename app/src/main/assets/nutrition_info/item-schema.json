@@ -75,61 +75,69 @@
         },
         "calories": {
           "type": "integer",
-          "description": "Calorie count"
+          "description": "Total Calorie count"
+        },
+        "caloriesFromFat": {
+          "type": "integer",
+          "description": "Calories from Fat"
         },
         "carbohydrateContent": {
           "type": "number",
-          "description": "Carbohydrate content"
+          "description": "Carbohydrate content (g)"
         },
         "cholesterolContent": {
           "type": "number",
-          "description": "Cholesterol content"
+          "description": "Cholesterol content (mg)"
         },
         "fatContent": {
           "type": "number",
-          "description": "Total fat content"
+          "description": "Total fat content (g)"
         },
         "fiberContent": {
           "type": "number",
-          "description": "Fiber content"
+          "description": "Fiber content (g)"
         },
         "proteinContent": {
           "type": "number",
-          "description": "Protein content"
+          "description": "Protein content (g)"
         },
         "saturatedFatContent": {
           "type": "number",
-          "description": "Saturated fat content"
+          "description": "Saturated fat content (g)"
         },
         "sodiumContent": {
           "type": "number",
-          "description": "Sodium content"
+          "description": "Sodium content (mg)"
         },
         "sugarContent": {
           "type": "number",
-          "description": "Sugar content"
+          "description": "Total Sugars (g)"
         },
         "transFatContent": {
           "type": "number",
-          "description": "Trans fat content"
-        },
-        "unsaturatedFatContent": {
-          "type": "number",
-          "description": "Unsaturated fat content"
+          "description": "Trans fat content (g)"
         }
       }
     },
     "MenuCustomization": {
       "type": "object",
-      "description": "Short description about a menu customization option",
+      "description": "Menu customization option",
       "properties": {
         "type": {
           "type": "string",
           "description": "Type of customization (e.g. Add, Remove, Substitute, etc)"
         },
-        "description": {
+        "ingredient": {
           "type": "string",
-          "description": "Description of the customization (start with a relevant emoji if possible)"
+          "description": "Name of the ingredient (e.g. Cheese, Turkey, Mushroom). Starts with a relevant emoji if possible"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Short description of why this customization is a good choice for the user's dietary goals"
+        },
+        "substituted": {
+          "type": "string",
+          "description": "Optional. If type is 'Substitute', this is the name of the ingredient being substituted"
         },
         "nutritionDifference": {
           "type": "object",

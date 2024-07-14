@@ -44,6 +44,12 @@ fun WelcomeScreen(
             Text(text = "Dietary Preference")
         }
 
+        Button(onClick = {
+            navController.navigate("generateOrder")
+        }) {
+            Text(text = "I'm feeling hungry!")
+        }
+
 
     }
 }

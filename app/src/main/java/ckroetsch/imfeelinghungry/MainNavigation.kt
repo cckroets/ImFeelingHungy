@@ -2,6 +2,7 @@ package ckroetsch.imfeelinghungry
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,16 +14,20 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -64,6 +69,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
             composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
             composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
             composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
+            composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
             // Add other destinations here
         }
     }
@@ -76,7 +82,7 @@ fun DietaryPreferenceScreen(
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
-    val selectedFoods = viewModel.dietaryPreferences.toMap()
+    val selectedFoods = viewModel.preferences.dietaryPreferences.toMap()
     val isSelected = { diet: Diet -> selectedFoods[diet.name] == Preference.LIKED }
 
     Column(
@@ -110,7 +116,7 @@ fun FoodScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        val selectedFoods = viewModel.foodPreferences.toMap()
+        val selectedFoods = viewModel.preferences.foodPreferences.toMap()
         val isSelected = { food: Food -> selectedFoods[food.name] == Preference.LIKED }
         FoodSelection(
             modifier = Modifier.weight(1f),
@@ -135,7 +141,7 @@ fun RestaurantScreen(
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
-    val selectedRestaurants = viewModel.restaurantPreferences.toMap()
+    val selectedRestaurants = viewModel.preferences.restaurantPreferences.toMap()
     val isSelected = { restaurant: Restaurant -> selectedRestaurants[restaurant.name] == Preference.LIKED }
     Column(
         modifier = modifier
@@ -154,6 +160,32 @@ fun RestaurantScreen(
             nextPage = "food",
             prevPage = "welcome",
             modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun GeneratedOrderScreen(
+    modifier: Modifier = Modifier,
+    viewModel: PreferencesViewModel,
+    navController: NavController
+) {
+    var text by remember { mutableStateOf("Generating...") }
+
+    LaunchedEffect(Unit) {
+        viewModel.generateMenuItem().collect { data ->
+            text = data
+        }
+    }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 36.sp,
+            modifier = Modifier.align(Alignment.Center)
         )
     }
 }

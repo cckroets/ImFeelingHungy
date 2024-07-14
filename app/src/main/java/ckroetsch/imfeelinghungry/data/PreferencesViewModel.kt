@@ -28,7 +28,11 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
 
     private val dataStore = application.dataStore
     val preferences = UserPreferences(viewModelScope, dataStore)
-    private val chef = GenerativeChef(preferences)
+    private val chef = GenerativeChef(application.assets, preferences)
+
+    private val item by lazy {
+        chef.generateMenuItem()
+    }
 
     init {
         preferences.observeChanges()
@@ -50,12 +54,7 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
         preferences.setRestaurantPreference(restaurant, preference)
     }
 
-    fun generateMenuItem(): Flow<String> = callbackFlow {
-        launch {
-            send(chef.generateMenuItem())
-        }
-        awaitClose {  }
-    }
+    fun generateMenuItem(): Flow<Result<MenuItem>> = item
 
     suspend fun isDataStoreEmpty(): Boolean {
         return isDataStoreEmpty(dataStore)

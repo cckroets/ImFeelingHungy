@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "required": ["restaurantName", "menuItemTitle", "menuItemLongDescription", "nutrition", "appliedCustomizations", "availableCustomizations", "redoModifiers"],
+  "properties": {
+    "restaurantName": {
+      "type": "string",
+      "description": "Name of the restaurant"
+    },
+    "menuItemTitle": {
+      "type": "string",
+      "description": "Creative title of the menu item"
+    },
+    "menuItemLongDescription": {
+      "type": "string",
+      "description": "Detailed description of the menu item"
+    },
+    "reasons": {
+      "type": "array",
+      "description": "List of reasons why this menu item is a good choice for the user",
+      "items": {
+        "$ref": "#/definitions/Reason"
+      }
+    },
+    "nutrition": {
+      "type": "object",
+      "description": "Nutritional information for the menu item",
+      "$ref": "#/definitions/NutritionalInformation"
+    },
+    "appliedCustomizations": {
+      "type": "array",
+      "description": "List of customizations already applied to this menu item",
+      "items": {
+        "$ref": "#/definitions/MenuCustomization"
+      }
+    },
+    "availableCustomizations": {
+      "type": "array",
+      "description": "List of available customizations for this menu item. The title should be verbs such as (Add Cheese, etc)",
+      "items": {
+        "$ref": "#/definitions/MenuCustomization"
+      }
+    },
+    "redoModifiers": {
+      "type": "array",
+      "description": "List of modifiers for re-generating the menu item (e.g. More Protein, Less Sugar)",
+      "items": {
+        "type": "string"
+      }
+    }
+  } ,
+  "definitions": {
+    "Reason": {
+        "type": "object",
+        "description": "Description about why this menu customization is a good choice for the user",
+        "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the reason (start with a relevant emoji)"
+            },
+            "description": {
+              "type": "string",
+              "description": "Explanation about how this customization helps the user reach their dietary goals"
+            }
+        }
+    },
+    "NutritionalInformation": {
+      "type": "object",
+      "description": "Nutritional information details",
+      "required": [ "estimated" ],
+      "properties": {
+        "estimated": {
+          "type": "boolean",
+          "description": "Whether the nutritional information is estimated or exact"
+        },
+        "calories": {
+          "type": "integer",
+          "description": "Calorie count"
+        },
+        "carbohydrateContent": {
+          "type": "number",
+          "description": "Carbohydrate content"
+        },
+        "cholesterolContent": {
+          "type": "number",
+          "description": "Cholesterol content"
+        },
+        "fatContent": {
+          "type": "number",
+          "description": "Total fat content"
+        },
+        "fiberContent": {
+          "type": "number",
+          "description": "Fiber content"
+        },
+        "proteinContent": {
+          "type": "number",
+          "description": "Protein content"
+        },
+        "saturatedFatContent": {
+          "type": "number",
+          "description": "Saturated fat content"
+        },
+        "sodiumContent": {
+          "type": "number",
+          "description": "Sodium content"
+        },
+        "sugarContent": {
+          "type": "number",
+          "description": "Sugar content"
+        },
+        "transFatContent": {
+          "type": "number",
+          "description": "Trans fat content"
+        },
+        "unsaturatedFatContent": {
+          "type": "number",
+          "description": "Unsaturated fat content"
+        }
+      }
+    },
+    "MenuCustomization": {
+      "type": "object",
+      "description": "Short description about a menu customization option",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of customization (e.g. Add, Remove, Substitute, etc)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the customization (start with a relevant emoji if possible)"
+        },
+        "nutritionDifference": {
+          "type": "object",
+          "description": "Nutritional information difference caused by the customization. Values may be negative if the customization reduces the nutritional content",
+          "$ref": "#/definitions/NutritionalInformation"
+        }
+      }
+    }
+  }
+}

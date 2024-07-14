@@ -1,6 +1,8 @@
 package ckroetsch.imfeelinghungry
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -26,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,6 +44,7 @@ import ckroetsch.imfeelinghungry.onboarding.RestaurantSelection
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ckroetsch.imfeelinghungry.data.Preference
+import ckroetsch.imfeelinghungry.data.Result
 import ckroetsch.imfeelinghungry.onboarding.AllFoods
 import ckroetsch.imfeelinghungry.onboarding.AllPreferences
 import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
@@ -170,23 +176,19 @@ fun GeneratedOrderScreen(
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
-    var text by remember { mutableStateOf("Generating...") }
+    val menuItem by viewModel.generateMenuItem().collectAsState(Result.Loading)
 
-    LaunchedEffect(Unit) {
-        viewModel.generateMenuItem().collect { data ->
-            text = data
+    when (val m = menuItem) {
+        is Result.Error -> {
+            Text(text = "Error: ${m.message}")
         }
-    }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 36.sp,
-            modifier = Modifier.align(Alignment.Center)
-        )
+        Result.Loading -> {
+            Text(text = "Loading...")
+            // Add other composable content her
+        }
+        is Result.Success -> {
+            MenuItemScreen(m.data)
+        }
     }
 }
 

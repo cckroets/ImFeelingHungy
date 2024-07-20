@@ -2,10 +2,14 @@ package ckroetsch.imfeelinghungry
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -96,9 +100,62 @@ fun WelcomeScreen(
                 text = "Get Started",
                 style = MaterialTheme.typography.titleLarge,
             )
+            //Spacer for title
+            Spacer(modifier = Modifier.height(35.dp))
+            //Title
+            Text(
+                text = "I'M FEELIN' HUNGRY",
+                style = TextStyle(fontSize = 55.sp),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            )
+            //Spacer for title and image
+            Spacer(modifier = Modifier.height(10.dp))
+
+
+            //Placeholder
+            Image(
+                painter = painterResource(R.drawable.app_icon),
+                contentDescription = "App Icon",
+                modifier = Modifier
+                    .size(250.dp)
+                    .clip(CircleShape)
+            )
+
+
+            Text(
+                text = "Discover healthier alternatives to enjoy fast food and eat smart",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(55.dp))
+
+            Button(
+                shape = RoundedCornerShape(26.dp),
+                modifier = Modifier.size(width = 200.dp, height = 65.dp),
+                onClick = {
+                    navController.navigate("restaurant")
+                }) {
+                Text(
+                    text = "Get Started",
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+
+            Button(onClick = {
+                navController.navigate("generateOrder")
+            }) {
+                Text(text = "I'm feeling hungry!")
+            }
+
+
         }
-
-
     }
 }
 
@@ -110,5 +167,4 @@ fun WelcomeScreenPreview() {
         val navController = rememberNavController()
         WelcomeScreen(modifier = Modifier, navController = navController)
     }
-
 }

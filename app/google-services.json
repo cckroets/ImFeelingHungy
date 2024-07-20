@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "297694064854",
+    "project_id": "imfeelinghungry-29807",
+    "storage_bucket": "imfeelinghungry-29807.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297694064854:android:caca3ef1ba8c073ec65977",
+        "android_client_info": {
+          "package_name": "ckroetsch.imfeelinghungry"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFRW2ljDbG3_ui5rrqOrvpkT5OOuBHT5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

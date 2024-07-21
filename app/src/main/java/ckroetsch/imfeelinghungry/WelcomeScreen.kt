@@ -37,8 +37,6 @@ fun WelcomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
 ) {
-
-
     Column(
         modifier
             .background(Color(0xffffd32b))

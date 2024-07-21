@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import ckroetsch.imfeelinghungry.dataStore
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
 import ckroetsch.imfeelinghungry.onboarding.Diet
+import ckroetsch.imfeelinghungry.onboarding.DietType
 import ckroetsch.imfeelinghungry.onboarding.Food
+import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
 import ckroetsch.imfeelinghungry.onboarding.Restaurant
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +57,11 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun generateMenuItem(): Flow<Result<MenuItem>> = item
+
+    val dietGoals: List<NutritionGoal> get() = preferences.dietaryPreferences
+        .filter { it.value == Preference.LIKED }
+        .mapNotNull { preferredDiet -> DietType.entries.firstOrNull { preferredDiet.key == it.idName } }
+        .flatMap { it.goals }
 
     suspend fun isDataStoreEmpty(): Boolean {
         return isDataStoreEmpty(dataStore)

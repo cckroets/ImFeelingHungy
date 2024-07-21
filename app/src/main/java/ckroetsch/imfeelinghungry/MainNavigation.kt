@@ -45,6 +45,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
             composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
             composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
             composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
+            composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
             // Add other destinations here
         }
     }
@@ -67,7 +68,8 @@ fun GeneratedOrderScreen(
             // Add other composable content her
         }
         is Result.Success -> {
-            MenuItemScreen(m.data)
+            val goals = remember(viewModel) { viewModel.dietGoals }
+            MenuItemScreen(m.data, goals)
         }
     }
 }

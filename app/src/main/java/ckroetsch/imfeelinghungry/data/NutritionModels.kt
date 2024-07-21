@@ -6,14 +6,21 @@ enum class NutritionUnit(val suffix: String) {
     MILLIGRAMS("mg"),
 }
 
-enum class DailyValue(val value: Int, val unit: NutritionUnit) {
-    CALORIES(2000, NutritionUnit.CALORIES),
-    CARBOHYDRATES(275, NutritionUnit.GRAMS),
-    FAT(78, NutritionUnit.GRAMS),
-    PROTEIN(50, NutritionUnit.GRAMS),
-    FIBER(28, NutritionUnit.GRAMS),
-    SODIUM(2300, NutritionUnit.MILLIGRAMS),
-    ADDED_SUGAR(50, NutritionUnit.GRAMS),
-    SATURATED_FAT(20, NutritionUnit.GRAMS),
-    CHOLESTEROL(300, NutritionUnit.MILLIGRAMS),
+enum class NutritionMetric(
+    val displayName: String,
+    val dv: Int?,
+    val unit: NutritionUnit
+) {
+    CALORIES("Calories", 2000, NutritionUnit.CALORIES),
+    CARBOHYDRATES("Carbs", 275, NutritionUnit.GRAMS),
+    FAT("Fat", 78, NutritionUnit.GRAMS),
+    TRANS_FAT("Trans Fat", null, NutritionUnit.GRAMS),
+    PROTEIN("Protein", 50, NutritionUnit.GRAMS),
+    FIBER("Fiber", 28, NutritionUnit.GRAMS),
+    IRON("Iron", 18, NutritionUnit.MILLIGRAMS),
+    SODIUM("Sodium", 2300, NutritionUnit.MILLIGRAMS),
+    TOTAL_SUGAR("Sugar", null, NutritionUnit.GRAMS),
+    ADDED_SUGAR("Added Sugar", 50, NutritionUnit.GRAMS),
+    SATURATED_FAT("Sat. Fat", 20, NutritionUnit.GRAMS),
+    CHOLESTEROL("Cholesterol", 300, NutritionUnit.MILLIGRAMS),
 }

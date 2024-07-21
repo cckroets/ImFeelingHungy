@@ -69,6 +69,7 @@ fun RestaurantScreen(
                     if (isSelected(it)) Preference.DEFAULT else Preference.LIKED
                 )
             },
+
             restaurants = AllRestaurants,
             isSelected = isSelected,
         )
@@ -114,19 +115,22 @@ fun RestaurantCard(
 ) {
     // Add outline to Column when selected
     Column(
-        modifier = modifier.border(
-            width = 2.dp,
-            color = if (isSelected) Color.Green else Color.Transparent,
-            shape = RoundedCornerShape(12.dp) // Using rounded corners for the border
+        modifier = modifier
+            .border(
+                width = 2.dp,
+                color = if (isSelected) Color.Green else Color.Transparent,
+                shape = RoundedCornerShape(12.dp) // Using rounded corners for the border
 
-        ).clickable { select(!isSelected) },
+            )
+            .clickable { select(!isSelected) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
             model = restaurant.imageUrl,
             contentDescription = restaurant.name,
             contentScale = ContentScale.Fit,
-            modifier = Modifier.clip(RoundedCornerShape(12.dp))
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
                 .size(120.dp)
                 .background(Color.White)
         )

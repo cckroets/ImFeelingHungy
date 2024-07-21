@@ -2,19 +2,14 @@ package ckroetsch.imfeelinghungry
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,64 +94,18 @@ fun WelcomeScreen(
                 text = "Get Started",
                 style = MaterialTheme.typography.titleLarge,
             )
-            //Spacer for title
-            Spacer(modifier = Modifier.height(35.dp))
-            //Title
-            Text(
-                text = "I'M FEELIN' HUNGRY",
-                style = TextStyle(fontSize = 55.sp),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            )
-            //Spacer for title and image
-            Spacer(modifier = Modifier.height(10.dp))
+        }
 
-
-            //Placeholder
-            Image(
-                painter = painterResource(R.drawable.app_icon),
-                contentDescription = "App Icon",
-                modifier = Modifier
-                    .size(250.dp)
-                    .clip(CircleShape)
-            )
-
-
-            Text(
-                text = "Discover healthier alternatives to enjoy fast food and eat smart",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(55.dp))
-
-            Button(
-                shape = RoundedCornerShape(26.dp),
-                modifier = Modifier.size(width = 200.dp, height = 65.dp),
-                onClick = {
-                    navController.navigate("restaurant")
-                }) {
-                Text(
-                    text = "Get Started",
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-
-            Button(onClick = {
-                navController.navigate("generateOrder")
-            }) {
-                Text(text = "I'm feeling hungry!")
-            }
+        Button(onClick = {
+            navController.navigate("generateOrder")
+        }) {
+            Text(text = "I'm feeling hungry!")
+        }
 
 
         }
     }
-}
+
 
 
 @Preview
@@ -168,3 +116,5 @@ fun WelcomeScreenPreview() {
         WelcomeScreen(modifier = Modifier, navController = navController)
     }
 }
+
+

@@ -54,7 +54,6 @@ fun FoodScreen(
             color = Color.Black,
             modifier = Modifier.padding(vertical = 16.dp)
         )
-
         FoodSelection(
             modifier = Modifier.weight(1f),
             onSelect = {
@@ -66,7 +65,6 @@ fun FoodScreen(
             foods = AllFoods,
             isSelected = isSelected,
         )
-
         OnboardingNavigator(
             navController = navController,
             nextPage = "dietaryPreference",

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -24,8 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -34,10 +38,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.R
 import coil.compose.AsyncImage
 
@@ -126,166 +132,73 @@ val AllPreferences = listOf(
 val AllRestaurants = listOf(
     Restaurant("McDonald's", "https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo-500x281.png"),
     Restaurant("Starbucks", "https://1000logos.net/wp-content/uploads/2023/04/Starbucks-logo-500x281.png"),
-    Restaurant("Chick-fil-A", "https://1000logos.net/wp-content/uploads/2021/04/Chick-fil-A-logo-500x281.png"),
+    Restaurant("Chick-fil-A", "https://seeklogo.com/images/C/chick-fil-a-logo-3528751D14-seeklogo.com.png"),
     Restaurant("Subway", "https://1000logos.net/wp-content/uploads/2017/06/Subway-logo-500x278.png"),
     Restaurant("Pizza Hut", "https://1000logos.net/wp-content/uploads/2017/05/Pizza-Hut-logo-500x345.png"),
     Restaurant("Wendy's", "https://1000logos.net/wp-content/uploads/2017/08/Wendys-Logo-500x166.png"),
-    Restaurant("Taco Bell", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Domino's Pizza", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Burger King", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Dunkin", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("KFC", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Olive Garden", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("iHOP", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Chipotle Mexican Grill", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Panera Bread", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Popeyes Louisiana Kitchen", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Jack in the box", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Five Guy Burgers and Fries", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("In n Out", "https://www.logodesign.net/images/nature-logo.png"),
-    Restaurant("Jollibee", "https://www.logodesign.net/images/nature-logo.png"),
+    Restaurant("Taco Bell", "https://brandslogos.com/wp-content/uploads/images/large/taco-bell-logo-1.png"),
+    Restaurant("Domino's Pizza", "https://brandslogos.com/wp-content/uploads/images/large/dominos-logo.png"),
+    Restaurant("Burger King", "https://brandslogos.com/wp-content/uploads/images/large/burger-king-logo.png"),
+    Restaurant("Dunkin", "https://seeklogo.com/images/D/dunkin-logo-9395D53B67-seeklogo.com.png"),
+    Restaurant("KFC", "https://seeklogo.com/images/K/kfc-new-logo-72E6348046-seeklogo.com.png"),
+    Restaurant("Olive Garden", "https://seeklogo.com/images/O/olive-garden-logo-E35EBA47ED-seeklogo.com.png"),
+    Restaurant("iHOP", "https://seeklogo.com/images/I/ihop-logo-773205CEC6-seeklogo.com.png"),
+    Restaurant("Chipotle", "https://seeklogo.com/images/C/chipotle-mexican-grill-logo-0B3A1AD1EE-seeklogo.com.png"),
+    Restaurant("Panera Bread", "https://seeklogo.com/images/P/panera-bread-logo-1A9D50E5CA-seeklogo.com.png"),
+    Restaurant("Popeyes", "https://seeklogo.com/images/P/popeyes-logo-A358FB175D-seeklogo.com.png"),
+    Restaurant("Jack in the box", "https://seeklogo.com/images/J/jack-in-the-box-logo-1E1F3133BF-seeklogo.com.png"),
+    Restaurant("Five Guys", "https://seeklogo.com/images/F/five-guys-logo-EE87090C5B-seeklogo.com.png"),
+    Restaurant("In n Out", "https://seeklogo.com/images/I/In-N-Out_Burger-logo-55D778023E-seeklogo.com.png"),
+    Restaurant("Jollibee", "https://seeklogo.com/images/J/Jollibee-logo-CBD5940475-seeklogo.com.png"),
 )
 
+
 @Composable
-fun RestaurantSelection(
+fun OnboardingNavigator(
     modifier: Modifier = Modifier,
-    onSelect: (Restaurant) -> Unit,
-    restaurants : List<Restaurant> = AllRestaurants,
-    isSelected: (Restaurant) -> Boolean
+    navController: NavController,
+    nextPage: String,
+    prevPage: String = "welcome"
 ) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(128.dp),
-        contentPadding = PaddingValues(16.dp),
-        verticalItemSpacing = 16.dp,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        items(restaurants) { restaurant ->
-            RestaurantCard(restaurant, isSelected(restaurant), { onSelect(restaurant) })
-        }
-    }
-}
-
-@Composable
-fun FoodSelection(
-    modifier: Modifier = Modifier,
-    onSelect: (Food) -> Unit,
-    foods : List<Food> = AllFoods,
-    isSelected: (Food) -> Boolean
-) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(128.dp),
-        contentPadding = PaddingValues(10.dp),
-        verticalItemSpacing = 16.dp,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        items(foods) { food ->
-            FoodCard(food, isSelected(food), { onSelect(food) })
-        }
-
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun DietaryPreferenceSelection(
-    modifier: Modifier = Modifier,
-    onSelect: (Diet) -> Unit,
-    diets : List<Diet> = AllPreferences,
-    isSelected: (Diet) -> Boolean
-) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        diets.forEach { preference ->
-            key(preference) {
-                DietaryPreferencePill(
-                    preference,
-                    isSelected(preference),
-                    { onSelect(preference) },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun DietaryPreferencePill(
-    preference: Diet,
-    isSelected: Boolean,
-    select: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val color = if (isSelected) Color.Green else Color.Gray
-    val icon = if (isSelected) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
     Row(
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .clickable { select(!isSelected) }
-            .background(color, RoundedCornerShape(50))
-            .padding(16.dp)
+            .background(Color.Transparent)
+
 
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = preference.name)
-    }
-}
-
-@Composable
-fun FoodCard(
-    food: Food,
-    isSelected: Boolean,
-    select: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            painter = painterResource(food.icon),
-            contentDescription = food.name,
-            tint = Color.Unspecified,
-            modifier = Modifier.clip(CircleShape).clickable { select(!isSelected) }.border(
-                width = 4.dp,
-                color = if (isSelected) Color.Green else Color.Transparent,
-                shape = CircleShape
+        IconButton(
+            onClick = { navController.navigate(prevPage) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(22.dp)
+                    .scale(2f), // Scale up the icon,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null,
+                tint = Color(0xFF039be5)
             )
-        )
-        Text(text = food.name, modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
+
+        IconButton(
+            onClick = { navController.navigate(nextPage) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(22.dp)
+                    .scale(2f), // Scale up the icon,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = null,
+                tint = Color(0xFF039be5)
+            )
+        }
     }
 }
 
-@Composable
-fun RestaurantCard(
-    restaurant: Restaurant,
-    isSelected: Boolean,
-    select: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    // Add outline to Column when selected
-    Column(
-        modifier = modifier.border(
-            width = 2.dp,
-            color = if (isSelected) Color.Green else Color.Transparent,
-            shape = CircleShape
-        ).clickable { select(!isSelected) },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AsyncImage(
-            model = restaurant.imageUrl,
-            contentDescription = restaurant.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.clip(CircleShape)
-        )
-        Text(text = restaurant.name, modifier = Modifier.align(Alignment.CenterHorizontally))
-    }
-}
+
+
+
+
+
+

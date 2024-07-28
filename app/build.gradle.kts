@@ -55,10 +55,14 @@ android {
 }
 
 dependencies {
+    api(platform("dev.chrisbanes.compose:compose-bom:2024.07.00-alpha02"))
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.vertexai)
     implementation(libs.firebase.appcheck.playintegrity)
+
+    implementation(libs.lottie.compose)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
@@ -67,7 +71,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+    //implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)

@@ -1,5 +1,8 @@
 package ckroetsch.imfeelinghungry
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,10 +25,9 @@ import ckroetsch.imfeelinghungry.onboarding.FoodScreen
 import ckroetsch.imfeelinghungry.onboarding.RestaurantScreen
 import kotlinx.coroutines.launch
 
-
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
-    val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val viewModel: PreferencesViewModel = viewModel()
     var startDestination by remember { mutableStateOf<String?>(null) }
@@ -36,13 +38,16 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
     }
 
     if (startDestination != null) {
-        NavHost(navController = navController, startDestination = startDestination!!) {
-            composable("welcome") { WelcomeScreen(navController = navController) }
-            composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
-            composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
-            composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
-            composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
-            // Add other destinations here
+        SharedTransitionLayout {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = startDestination!!) {
+                composable("welcome") { WelcomeScreen(navController = navController) }
+                composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
+                composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
+                composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
+                composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
+                // Add other destinations here
+            }
         }
     }
 }
@@ -58,21 +63,25 @@ fun GeneratedOrderScreen(
         viewModel.generateMenuItem()
     }
 
-    when (val m = menuItem) {
-        is Result.Error -> {
-            Text(text = "Error: ${m.message}")
-        }
-        Result.Loading -> {
-            Text(text = "Loading...")
-            // Add other composable content her
-        }
-        is Result.Success -> {
-            val goals = remember(viewModel) { viewModel.dietGoals }
-            MenuItemScreen(
-                m.data,
-                goals,
-                navController
-            ) { viewModel.regenerateWithInstructions(it) }
+    Crossfade(menuItem) {
+        when (val m = it) {
+            is Result.Error -> {
+                Text(text = "Error: ${m.message}")
+            }
+
+            Result.Loading -> {
+                LoadingAnimation()
+                // Add other composable content her
+            }
+
+            is Result.Success -> {
+                val goals = remember(viewModel) { viewModel.dietGoals }
+                MenuItemScreen(
+                    m.data,
+                    goals,
+                    navController
+                ) { viewModel.regenerateWithInstructions(it) }
+            }
         }
     }
 }

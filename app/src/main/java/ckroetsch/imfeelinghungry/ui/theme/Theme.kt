@@ -1,39 +1,46 @@
 package ckroetsch.imfeelinghungry.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    background = Color(0xffffd32b),
+val LightPrimary = Color(0xff1a1a1a)
+val LightOnPrimary = Color.White
+val LightSecondary = Color(0xff00bcd4)
+val LightBackground = Color(0xffe0f7fa)
+val LightSurface = Color.White
+val LightOnSurface = Color.Black
+val LightPunchyColor = Color(0xffffd32b)
 
-    )
+val DarkPrimary = Color(0xff212121)
+val DarkOnPrimary = Color.White
+val DarkSecondary = Color(0xff03a9f4)
+val DarkBackground = Color(0xff303030)
+val DarkSurface = Color(0xff424242)
+val DarkOnSurface = Color.White
+val DarkPunchyColor = Color(0xffffd32b)
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40 ,
-    background = Color(0xffffd32b),
+val LightColorScheme = lightColorScheme(
+    primary = LightPrimary,
+    onPrimary = LightOnPrimary,
+    secondary = LightSecondary,
+    background = LightBackground,
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+    primaryContainer = LightPunchyColor // Use the punchy yellow for highlights
+)
 
-    /* Other default colors to override
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+val DarkColorScheme = darkColorScheme(
+    primary = DarkPrimary,
+    onPrimary = DarkOnPrimary,
+    secondary = DarkSecondary,
+    background = DarkBackground,
+    surface = DarkSurface,
+    onSurface = DarkOnSurface,
+    primaryContainer = DarkPunchyColor // Use the punchy yellow for highlights
 )
 
 @Composable

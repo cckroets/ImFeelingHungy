@@ -122,6 +122,7 @@ class GenerativeChef(
             Log.i(TAG, "Generating menu item for $diet, $restaurants")
             var result = ""
             var emittedError = false
+
             handleResponse(chat.sendMessageStream(content))
         }.flowOn(Dispatchers.IO)
     }
@@ -131,6 +132,7 @@ class GenerativeChef(
     ) {
         var result = ""
         var emittedError = false
+
         response.flowOn(Dispatchers.IO).catch { e ->
             Log.e(TAG, "Failed to generate content: ${e.message}", IllegalStateException(e))
             emittedError = true
@@ -143,8 +145,8 @@ class GenerativeChef(
             return
         }
         val final = result
-            .removePrefix("```json\n")
-            .removeSuffix("\n```")
+            .removePrefix("```json")
+            .removeSuffix("```")
             .let {
                 try {
                     Log.i(TAG, "Decoding JSON response...")
@@ -204,8 +206,8 @@ class GenerativeChef(
                 return@flow
             }
             val final = result
-                .removePrefix("```json\n")
-                .removeSuffix("\n```")
+                .removePrefix("```json")
+                .removeSuffix("```")
                 .let {
                     try {
                         Log.i(TAG, "Decoding JSON response...")

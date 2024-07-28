@@ -204,11 +204,11 @@ val AllPreferences = DietType.entries.map { dietType ->
 
 val AllRestaurants = listOf(
     Restaurant("McDonald's", "https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo-500x281.png"),
+    Restaurant("Wendy's", "https://1000logos.net/wp-content/uploads/2017/08/Wendys-Logo-500x166.png"),
     Restaurant("Starbucks", "https://1000logos.net/wp-content/uploads/2023/04/Starbucks-logo-500x281.png"),
     Restaurant("Chick-fil-A", "https://seeklogo.com/images/C/chick-fil-a-logo-3528751D14-seeklogo.com.png"),
     Restaurant("Subway", "https://1000logos.net/wp-content/uploads/2017/06/Subway-logo-500x278.png"),
     Restaurant("Pizza Hut", "https://1000logos.net/wp-content/uploads/2017/05/Pizza-Hut-logo-500x345.png"),
-    Restaurant("Wendy's", "https://1000logos.net/wp-content/uploads/2017/08/Wendys-Logo-500x166.png"),
     Restaurant("Taco Bell", "https://brandslogos.com/wp-content/uploads/images/large/taco-bell-logo-1.png"),
     Restaurant("Domino's Pizza", "https://brandslogos.com/wp-content/uploads/images/large/dominos-logo.png"),
     Restaurant("Burger King", "https://brandslogos.com/wp-content/uploads/images/large/burger-king-logo.png"),

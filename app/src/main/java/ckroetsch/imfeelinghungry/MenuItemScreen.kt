@@ -1,6 +1,14 @@
 package ckroetsch.imfeelinghungry
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -11,26 +19,35 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -39,8 +56,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.data.MenuCustomization
 import ckroetsch.imfeelinghungry.data.MenuItem
@@ -54,6 +73,7 @@ import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
 import ckroetsch.imfeelinghungry.onboarding.toGains
 import ckroetsch.imfeelinghungry.ui.theme.Green30
 import ckroetsch.imfeelinghungry.ui.theme.Red30
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +85,14 @@ fun MenuItemScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        //containerColor = Color.Transparent,
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            //.background(
+            //    brush = Brush.linearGradient(
+            //        colors = listOf(Color.White, Color.White, Color(0xffffd32b))
+            //    )
+            //),
         topBar = {
             TopAppBar(
                 title = {
@@ -176,7 +203,7 @@ fun MenuItemScreen(
 
 @Composable
 fun ReasonItem(reason: Reason) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+    MenuCard {
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = reason.title, fontWeight = FontWeight.Bold)
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
@@ -190,8 +217,7 @@ fun ReasonItem(reason: Reason) {
 
 @Composable
 fun NutritionalLabel(nutrition: NutritionalInformation, oldNutrition: NutritionalInformation) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-
+    MenuCard {
         Column(modifier = Modifier.padding(8.dp).padding(end = 16.dp)) {
             NutritionRow("Calories", isTopLevel = true, nutrition.calories, oldNutrition.calories, NutritionUnit.CALORIES)
             NutritionRow("Total Fat", isTopLevel = true, nutrition.fatContent, oldNutrition.fatContent, NutritionUnit.GRAMS)
@@ -270,7 +296,7 @@ fun NutritionalGain(
         style = MaterialTheme.typography.labelSmall,
         modifier = modifier
             .padding(horizontal = 2.dp)
-            .background(Color.LightGray, MaterialTheme.shapes.small)
+            .background(Color(0x6FCCCCCC), MaterialTheme.shapes.small)
             .padding(horizontal = 4.dp, vertical = 2.dp)
     )
 }
@@ -319,7 +345,7 @@ fun NutritionRow(
 
 @Composable
 fun MenuCreation(item: MenuItem, goals: List<NutritionGoal>) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+    MenuCard {
         Column(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -424,3 +450,54 @@ fun CustomizationItem(
     }
 }
 
+@Composable
+private fun MenuCard(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    val gradientBrush = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFF00FFAB), // Bright green
+            Color(0xFF6200EA), // Purple
+            Color(0xFFFFC107), // Amber
+            Color(0xFFFF4081)  // Pink
+        )
+    )
+    GenerativeAICard(
+        modifier.fillMaxWidth().padding(horizontal = 16.dp),
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun GenerativeAICard(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        modifier = modifier
+            .padding(16.dp)
+            .border(
+                border = BorderStroke(
+                    width = 4.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(Color.Cyan, Color.Magenta, Color.Blue, Color.Green)
+                    )
+                ),
+                shape = RoundedCornerShape(16.dp)
+            ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+        ) {
+            content()
+        }
+    }
+}

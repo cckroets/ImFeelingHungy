@@ -22,6 +22,7 @@ import ckroetsch.imfeelinghungry.onboarding.FoodScreen
 import ckroetsch.imfeelinghungry.onboarding.RestaurantScreen
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
     val navController = rememberNavController()
@@ -30,11 +31,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
     var startDestination by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            startDestination = if (preferencesViewModel.isDataStoreEmpty()) {
-                "welcome"
-            } else {
-                "restaurant"
-            }
+            startDestination = "welcome"
         }
     }
 

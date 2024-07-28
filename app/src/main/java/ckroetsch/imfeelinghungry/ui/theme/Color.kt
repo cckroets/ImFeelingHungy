@@ -14,3 +14,6 @@ val Green40 = Color(0xFF006837)
 val Green30 = Color(0xFF008C4D)
 
 val Red30 = Color(0xFFD32F2F)
+val DarkOrange = Color(0xFFD83C15)
+val DarkBlue = Color(0xFF435B8C)
+val MustardYellow = Color(0xFFF5CC2B)

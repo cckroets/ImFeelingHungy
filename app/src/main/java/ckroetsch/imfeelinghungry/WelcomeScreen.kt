@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import ckroetsch.imfeelinghungry.ui.theme.ImFeelingHungryTheme
 
 @Composable
@@ -82,28 +84,34 @@ fun WelcomeScreen(
         )
         Spacer(modifier = Modifier.height(55.dp))
 
+
         Button(
             shape = RoundedCornerShape(26.dp),
-            modifier = Modifier.size(width = 200.dp, height = 65.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = DarkOrange), // Bright red color
             onClick = {
-                navController.navigate("restaurant")
+                navController.navigate("generateOrder")
             }) {
             Text(
-                text = "Get Started",
+                text = "I'm feelin' hungry!",
                 style = MaterialTheme.typography.titleLarge,
             )
         }
 
-        Button(onClick = {
-            navController.navigate("generateOrder")
-        }) {
-            Text(text = "I'm feeling hungry!")
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Button(
+            shape = RoundedCornerShape(26.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = DarkOrange), // Bright red color
+            onClick = {
+                navController.navigate("restaurant")
+            }) {
+            Text(
+                text = "Change Preference",
+            )
         }
 
-
-        }
     }
-
+}
 
 
 @Preview

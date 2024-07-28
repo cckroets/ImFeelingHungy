@@ -3,6 +3,9 @@ package ckroetsch.imfeelinghungry.data
 import android.content.Context
 import android.content.res.AssetManager
 import android.util.Log
+import ckroetsch.imfeelinghungry.onboarding.AllPreferences
+import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
+import ckroetsch.imfeelinghungry.onboarding.Restaurant
 import com.google.firebase.Firebase
 import com.google.firebase.vertexai.type.BlockThreshold
 import com.google.firebase.vertexai.type.Content
@@ -88,14 +91,21 @@ class GenerativeChef(
     }
 
     fun generateFromChat(): Flow<Result<MenuItem>> {
-        val restaurants = userPreferences.restaurantPreferences.likedOptionsAsInput()
-        val food = userPreferences.foodPreferences.likedOptionsAsInput()
-        val diet = userPreferences.dietaryPreferences.likedOptionsAsInput()
+        val restaurants = userPreferences.restaurantPreferences.likedOptionsAsInput().takeIf{
+            it.isNotEmpty()
+        }?: listOf(AllRestaurants.take(3).map{it.name})
+        //val food = userPreferences.foodPreferences.likedOptionsAsInput()
+        val diet = userPreferences.dietaryPreferences.likedOptionsAsInput().takeIf{
+            it.isNotEmpty()
+        }?: listOf(AllPreferences.take(1).map{it.name})
+
+
 
         val prompt = """
             Generate a custom menu 'hack' item from one of the following restaurants: $restaurants that
-            best matches these food preferences: $food and dietary preferences: $diet. Do not suggest other diets.
-            Feel free to make modifications to the menu item as needed (add/remove/substitute).
+            best matches the dietary preferences: $diet. Do not suggest other diets.
+            Feel free to make modifications to the menu item as needed (add/remove/substitute) But make sure it is from
+            the menu.
         """.trimIndent()
 
         val content: Content = content {
@@ -109,7 +119,7 @@ class GenerativeChef(
                 return@flow
             }
 
-            Log.i(TAG, "Generating menu item for $food, $diet, $restaurants")
+            Log.i(TAG, "Generating menu item for $diet, $restaurants")
             var result = ""
             var emittedError = false
             handleResponse(chat.sendMessageStream(content))

@@ -36,6 +36,7 @@ class UserPreferences(
         }
     }
 
+
     fun checkIfDataStoreIsEmpty(): Boolean = runBlocking {
         isDataStoreEmpty(dataStore)
     }
@@ -69,7 +70,10 @@ class UserPreferences(
             }.collect()
         }
     }
+
+
 }
+
 
 
 private fun String.toPrefsMap(): Map<String, Preference> {
@@ -78,3 +82,4 @@ private fun String.toPrefsMap(): Map<String, Preference> {
         name to Preference.valueOf(preference)
     }
 }
+

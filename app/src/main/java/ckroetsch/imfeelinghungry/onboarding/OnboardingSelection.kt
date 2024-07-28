@@ -2,15 +2,9 @@ package ckroetsch.imfeelinghungry.onboarding
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,12 +15,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.IconButton
@@ -38,14 +31,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.R
-import coil.compose.AsyncImage
+import ckroetsch.imfeelinghungry.data.NutritionMetric
+import ckroetsch.imfeelinghungry.data.NutritionalInformation
 
 data class Restaurant(
     val name: String,
@@ -61,6 +54,57 @@ data class Diet(
     val name: String,
     val imageUrl: String,
 )
+
+enum class Amount {
+    LOW,
+    HIGH
+}
+
+data class NutritionGoal(
+    val amount: Amount,
+    val metric: NutritionMetric
+)
+
+data class NutritionalGain(
+    val metric: NutritionMetric,
+    val value: Double,
+)
+
+fun NutritionalInformation.toGains(): List<NutritionalGain> = buildList {
+    calories?.let {
+        add(NutritionalGain(NutritionMetric.CALORIES, it.toDouble()))
+    }
+    carbohydrateContent?.let {
+        add(NutritionalGain(NutritionMetric.CARBOHYDRATES, it))
+    }
+    cholesterolContent?.let {
+        add(NutritionalGain(NutritionMetric.CHOLESTEROL, it))
+    }
+    fatContent?.let {
+        add(NutritionalGain(NutritionMetric.FAT, it))
+    }
+    fiberContent?.let {
+        add(NutritionalGain(NutritionMetric.FIBER, it))
+    }
+    proteinContent?.let {
+        add(NutritionalGain(NutritionMetric.PROTEIN, it))
+    }
+    saturatedFatContent?.let {
+        add(NutritionalGain(NutritionMetric.SATURATED_FAT, it))
+    }
+    ironContent?.let {
+        add(NutritionalGain(NutritionMetric.IRON, it))
+    }
+    sodiumContent?.let {
+        add(NutritionalGain(NutritionMetric.SODIUM, it))
+    }
+    sugarContent?.let {
+        add(NutritionalGain(NutritionMetric.TOTAL_SUGAR, it))
+    }
+    transFatContent?.let {
+        add(NutritionalGain(NutritionMetric.TRANS_FAT, it))
+    }
+}.filter { it.value != 0.0 }.distinctBy { it.metric }
 
 val AllFoods = listOf(
     Food("Pizza", R.drawable._243_pizza),
@@ -87,24 +131,52 @@ val AllFoods = listOf(
     Food("Beverages", R.drawable._010_soft_drink),
 )
 
-val AllPreferences = listOf(
-    Diet("High Protein", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("High Fiber", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("High Iron", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Vegan", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Vegetarian", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Keto", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Gluten Free", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Dairy Free", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Paleo", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Pescatarian", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Low Carb", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Low Fat", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Low Calorie", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Low Sugar", "https://www.logodesign.net/images/nature-logo.png"),
-    Diet("Low Sodium", "https://www.logodesign.net/images/nature-logo.png"),
-)
+enum class DietType(
+    val idName: String,
+    val imageUrl: String,
+    val goals: List<NutritionGoal>
+) {
+    HIGH_PROTEIN("High Protein", "", listOf(
+        NutritionGoal(Amount.HIGH, NutritionMetric.PROTEIN)
+    )),
+    HIGH_FIBER("High Fiber", "", listOf(
+        NutritionGoal(Amount.HIGH, NutritionMetric.FIBER)
+    )),
+    HIGH_IRON("High Iron", "", listOf(
+        NutritionGoal(Amount.HIGH, NutritionMetric.IRON)
+    )),
+    VEGAN("Vegan", "", listOf()),
+    VEGETARIAN("Vegetarian", "", listOf()),
+    KETO("Keto", "", listOf(
+        NutritionGoal(Amount.HIGH, NutritionMetric.PROTEIN),
+        NutritionGoal(Amount.LOW, NutritionMetric.CALORIES),
+        NutritionGoal(Amount.LOW, NutritionMetric.CARBOHYDRATES)
+    )),
+    GLUTEN_FREE("Gluten Free", "", listOf()),
+    DAIRY_FREE("Dairy Free", "", listOf()),
+    LOW_CARB("Low Carb", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.CARBOHYDRATES)
+    )),
+    LOW_FAT("Low Fat", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.FAT)
+    )),
+    LOW_CALORIE("Low Calorie", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.CALORIES)
+    )),
+    LOW_SUGAR("Low Sugar", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.TOTAL_SUGAR)
+    )),
+    LOW_SODIUM("Low Sodium", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.SODIUM)
+    )),
+    LOW_CHOLESTEROL("Low Cholesterol", "", listOf(
+        NutritionGoal(Amount.LOW, NutritionMetric.CHOLESTEROL)
+    ))
+}
 
+val AllPreferences = DietType.entries.map { dietType ->
+    Diet(dietType.idName, dietType.imageUrl)
+}
 
 /**
  * McDonald’s- McDonalds-logo-500x281.png

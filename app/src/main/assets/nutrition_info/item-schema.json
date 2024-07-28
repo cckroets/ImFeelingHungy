@@ -1,19 +1,23 @@
 {
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
-  "required": ["restaurantName", "menuItemTitle", "menuItemLongDescription", "nutrition", "appliedCustomizations", "availableCustomizations", "redoModifiers"],
+  "required": ["restaurantName", "menuItemTitle", "reasons", "creationTitle", "creationDescription", "originalNutrition", "appliedCustomizations", "availableCustomizations", "redoModifiers"],
   "properties": {
     "restaurantName": {
       "type": "string",
       "description": "Name of the restaurant"
     },
+    "creationTitle": {
+      "type": "string",
+      "description": "Creative title for this unique menu item creation"
+    },
+    "creationDescription": {
+      "type": "string",
+      "description": "Detailed description of the customized menu item creation"
+    },
     "menuItemTitle": {
       "type": "string",
-      "description": "Creative title of the menu item"
-    },
-    "menuItemLongDescription": {
-      "type": "string",
-      "description": "Detailed description of the menu item"
+      "description": "Base menu item being modified"
     },
     "reasons": {
       "type": "array",
@@ -22,9 +26,9 @@
         "$ref": "#/definitions/Reason"
       }
     },
-    "nutrition": {
+    "originalNutrition": {
       "type": "object",
-      "description": "Nutritional information for the menu item",
+      "description": "Nutritional information for the base menu item",
       "$ref": "#/definitions/NutritionalInformation"
     },
     "appliedCustomizations": {
@@ -67,12 +71,7 @@
     "NutritionalInformation": {
       "type": "object",
       "description": "Nutritional information details",
-      "required": [ "estimated" ],
       "properties": {
-        "estimated": {
-          "type": "boolean",
-          "description": "Whether the nutritional information is estimated or exact"
-        },
         "calories": {
           "type": "integer",
           "description": "Total Calorie count"
@@ -109,6 +108,10 @@
           "type": "number",
           "description": "Sodium content (mg)"
         },
+        "ironContent": {
+          "type": "number",
+          "description": "Iron content (mg)"
+        },
         "sugarContent": {
           "type": "number",
           "description": "Total Sugars (g)"
@@ -122,10 +125,12 @@
     "MenuCustomization": {
       "type": "object",
       "description": "Menu customization option",
+      "required": ["type", "ingredient", "reason", "nutritionDifference"],
       "properties": {
         "type": {
           "type": "string",
-          "description": "Type of customization (e.g. Add, Remove, Substitute, etc)"
+          "description": "Type of customization",
+          "enum": ["Choose", "Add", "Remove", "Substitute"]
         },
         "ingredient": {
           "type": "string",
@@ -133,15 +138,15 @@
         },
         "reason": {
           "type": "string",
-          "description": "Short description of why this customization is a good choice for the user's dietary goals"
+          "description": "Short description of why this customization is a good choice for the user's dietary goals and how it may be used to enhance the menu item"
         },
         "substituted": {
           "type": "string",
-          "description": "Optional. If type is 'Substitute', this is the name of the ingredient being substituted"
+          "description": "Optional. If type is 'Substitute', this is the name of the ingredient being removed and replaced with [ingredient]"
         },
         "nutritionDifference": {
           "type": "object",
-          "description": "Nutritional information difference caused by the customization. Values may be negative if the customization reduces the nutritional content",
+          "description": "Nutritional information difference caused by this individual customization. Removals should be negative values, Additions should be positive values, Substitutions should be the difference between the two ingredients",
           "$ref": "#/definitions/NutritionalInformation"
         }
       }

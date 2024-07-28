@@ -11,7 +11,6 @@ android {
     namespace = "ckroetsch.imfeelinghungry"
     compileSdk = 34
 
-
     defaultConfig {
         applicationId = "ckroetsch.imfeelinghungry"
         minSdk = 26
@@ -59,6 +58,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.vertexai)
+    implementation(libs.firebase.appcheck.playintegrity)
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.constraintlayout.compose)
@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.generativeai)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.test.android)
+    implementation(libs.firebase.appcheck.debug)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -6,14 +6,14 @@ import androidx.lifecycle.viewModelScope
 import ckroetsch.imfeelinghungry.dataStore
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
 import ckroetsch.imfeelinghungry.onboarding.Diet
+import ckroetsch.imfeelinghungry.onboarding.DietType
 import ckroetsch.imfeelinghungry.onboarding.Food
+import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
 import ckroetsch.imfeelinghungry.onboarding.Restaurant
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 
 
@@ -30,9 +30,9 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     val preferences = UserPreferences(viewModelScope, dataStore)
     private val chef = GenerativeChef(application, application.assets, preferences)
 
-    private val item by lazy {
-        chef.generateMenuItem()
-    }
+    private val item: MutableStateFlow<Result<MenuItem>> = MutableStateFlow(Result.Loading)
+
+    val generatedMenuItem: StateFlow<Result<MenuItem>> get() = item
 
     init {
         preferences.observeChanges()
@@ -54,7 +54,22 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
         preferences.setRestaurantPreference(restaurant, preference)
     }
 
-    fun generateMenuItem(): Flow<Result<MenuItem>> = item
+    fun generateMenuItem() {
+        chef.generateFromChat().onEach { item ->
+            this.item.value = item
+        }.launchIn(viewModelScope)
+    }
+
+    fun regenerateWithInstructions(instructions: String) {
+        chef.regenerateWithInstructions(instructions).onEach { item ->
+            this.item.value = item
+        }.launchIn(viewModelScope)
+    }
+
+    val dietGoals: List<NutritionGoal> get() = preferences.dietaryPreferences
+        .filter { it.value == Preference.LIKED }
+        .mapNotNull { preferredDiet -> DietType.entries.firstOrNull { preferredDiet.key == it.idName } }
+        .flatMap { it.goals }
 
     suspend fun isDataStoreEmpty(): Boolean {
         return isDataStoreEmpty(dataStore)

@@ -56,7 +56,10 @@ fun GeneratedOrderScreen(
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
-    val menuItem by viewModel.generateMenuItem().collectAsState(Result.Loading)
+    val menuItem by viewModel.generatedMenuItem.collectAsState(Result.Loading)
+    LaunchedEffect(Unit) {
+        viewModel.generateMenuItem()
+    }
 
     when (val m = menuItem) {
         is Result.Error -> {
@@ -67,7 +70,12 @@ fun GeneratedOrderScreen(
             // Add other composable content her
         }
         is Result.Success -> {
-            MenuItemScreen(m.data)
+            val goals = remember(viewModel) { viewModel.dietGoals }
+            MenuItemScreen(
+                m.data,
+                goals,
+                navController
+            ) { viewModel.regenerateWithInstructions(it) }
         }
     }
 }

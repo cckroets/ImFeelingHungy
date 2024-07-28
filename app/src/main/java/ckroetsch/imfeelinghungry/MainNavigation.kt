@@ -31,11 +31,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
     var startDestination by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            startDestination = if (preferencesViewModel.isDataStoreEmpty()) {
-                "welcome"
-            } else {
-                "restaurant"
-            }
+            startDestination = "welcome"
         }
     }
 
@@ -45,6 +41,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
             composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
             composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
             composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
+            composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
             // Add other destinations here
         }
     }

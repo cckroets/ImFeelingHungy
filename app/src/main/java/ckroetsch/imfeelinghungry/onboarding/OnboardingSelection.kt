@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.R
 import ckroetsch.imfeelinghungry.data.NutritionMetric
 import ckroetsch.imfeelinghungry.data.NutritionalInformation
+import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 
 data class Restaurant(
     val name: String,
@@ -249,7 +250,7 @@ fun OnboardingNavigator(
                     .scale(2f), // Scale up the icon,
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = null,
-                tint = Color(0xFF039be5)
+                tint = DarkOrange
             )
         }
 
@@ -262,7 +263,7 @@ fun OnboardingNavigator(
                     .scale(2f), // Scale up the icon,
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
-                tint = Color(0xFF039be5)
+                tint = DarkOrange
             )
         }
     }

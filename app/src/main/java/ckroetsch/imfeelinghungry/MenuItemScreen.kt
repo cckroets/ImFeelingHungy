@@ -11,26 +11,37 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.data.MenuCustomization
 import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.data.ModificationType
@@ -42,40 +53,79 @@ import ckroetsch.imfeelinghungry.onboarding.Amount
 import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
 import ckroetsch.imfeelinghungry.onboarding.toGains
 import ckroetsch.imfeelinghungry.ui.theme.Green30
+import ckroetsch.imfeelinghungry.ui.theme.Red30
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuItemScreen(menuItem: MenuItem, goals: List<NutritionGoal>) {
+fun MenuItemScreen(
+    menuItem: MenuItem,
+    goals: List<NutritionGoal>,
+    navController: NavController,
+    onRegenerate: (String) -> Unit,
+) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(title = { Text(menuItem.restaurantName) })
+            TopAppBar(
+                title = {
+                        Text(
+                            menuItem.restaurantName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                    },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
         }
     ) { padding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = padding.calculateStartPadding(LayoutDirection.Ltr),
+                end = padding.calculateEndPadding(LayoutDirection.Ltr),
+                top = padding.calculateTopPadding() + 16.dp,
+                bottom = padding.calculateBottomPadding()
+            )
         ) {
+            val paddedModifier = Modifier.padding(horizontal = 16.dp)
             item {
                 Text(
                     text = menuItem.creationTitle ?: menuItem.menuItemTitle,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = paddedModifier
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = menuItem.creationDescription)
+                Text(text = menuItem.creationDescription, modifier = paddedModifier)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
             item {
-                Text(text = "How to order", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = "How to order",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = paddedModifier
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 MenuCreation(menuItem, goals)
                 Spacer(modifier = Modifier.height(8.dp))
             }
             item {
-                Text(text = "Highlights", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = "Highlights",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = paddedModifier
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
             itemsIndexed(menuItem.reasons) { index, reason ->
@@ -87,26 +137,22 @@ fun MenuItemScreen(menuItem: MenuItem, goals: List<NutritionGoal>) {
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Nutrition", style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = "Nutrition",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = paddedModifier
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 NutritionalLabel(menuItem.calculateFinalNutrition(), menuItem.originalNutrition)
             }
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Optional Modifications", style = MaterialTheme.typography.labelMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            itemsIndexed(menuItem.availableCustomizations) { index, customization ->
-                CustomizationItem(customization, goals)
-                if (index < menuItem.availableCustomizations.size - 1) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-
-            item {
-                Text(text = "Redo Modifiers", style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Regenerate",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = paddedModifier
+                )
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -115,7 +161,7 @@ fun MenuItemScreen(menuItem: MenuItem, goals: List<NutritionGoal>) {
                 ) {
                     items(menuItem.redoModifiers) { redoText ->
                         Button(
-                            onClick = { },
+                            onClick = { onRegenerate(redoText) },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                         ) {
@@ -130,7 +176,7 @@ fun MenuItemScreen(menuItem: MenuItem, goals: List<NutritionGoal>) {
 
 @Composable
 fun ReasonItem(reason: Reason) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = reason.title, fontWeight = FontWeight.Bold)
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
@@ -144,7 +190,7 @@ fun ReasonItem(reason: Reason) {
 
 @Composable
 fun NutritionalLabel(nutrition: NutritionalInformation, oldNutrition: NutritionalInformation) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
 
         Column(modifier = Modifier.padding(8.dp).padding(end = 16.dp)) {
             NutritionRow("Calories", isTopLevel = true, nutrition.calories, oldNutrition.calories, NutritionUnit.CALORIES)
@@ -161,27 +207,36 @@ fun NutritionalLabel(nutrition: NutritionalInformation, oldNutrition: Nutritiona
     }
 }
 
+enum class GainType {
+    GOOD,
+    BAD
+}
+
 @Composable
 private fun NutritionalBenefits(
     nutrition: NutritionalInformation,
     goals: List<NutritionGoal>,
     modifier: Modifier = Modifier
 ) {
-    val relevantGains = remember(nutrition, goals) {
+    val relevantMetrics = remember(nutrition, goals) {
         nutrition
             .toGains()
-            .filter { gain ->
-                val goal = goals.firstOrNull { it.metric == gain.metric } ?: return@filter false
-                when (goal.amount) {
-                    Amount.LOW -> gain.value < 0
-                    Amount.HIGH -> gain.value > 0
+            .mapNotNull { gain ->
+                val goal = goals.firstOrNull { it.metric == gain.metric } ?: return@mapNotNull null
+                val gainType = when {
+                    gain.value == 0.0 -> return@mapNotNull null
+                    goal.amount == Amount.LOW && gain.value < 0 -> GainType.GOOD
+                    goal.amount == Amount.HIGH && gain.value > 0 -> GainType.GOOD
+                    else -> GainType.BAD
                 }
-            }
+                gain to gainType
+            }.sortedBy { it.first.metric.ordinal }
     }
-    relevantGains.forEach { gain ->
+    relevantMetrics.forEach { (gain, gainType) ->
         NutritionalGain(
             label = gain.metric.displayName,
             value = gain.value,
+            gainType = gainType,
             unit = gain.metric.unit,
             modifier = modifier
         )
@@ -192,12 +247,16 @@ private fun NutritionalBenefits(
 fun NutritionalGain(
     label: String,
     value: Number,
+    gainType: GainType,
     unit: NutritionUnit,
     modifier: Modifier = Modifier
 ) {
+    val color = when (gainType) {
+        GainType.GOOD -> Green30
+        GainType.BAD -> Red30
+    }
     Text(
         text = buildAnnotatedString {
-            pushStyle(SpanStyle(color = Color.White))
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 if (value.toInt() > 0) append("+")
                 append("${value.toInt()}${unit.suffix}")
@@ -206,12 +265,13 @@ fun NutritionalGain(
             withStyle(SpanStyle(fontWeight = FontWeight.Normal)) {
                 append(label)
             }
-            pop()
         },
+        color = color,
         style = MaterialTheme.typography.labelSmall,
         modifier = modifier
             .padding(horizontal = 2.dp)
-            .background(Green30, MaterialTheme.shapes.small).padding(horizontal = 4.dp, vertical = 2.dp)
+            .background(Color.LightGray, MaterialTheme.shapes.small)
+            .padding(horizontal = 4.dp, vertical = 2.dp)
     )
 }
 
@@ -235,22 +295,31 @@ fun NutritionRow(
     ) {
         Text(text = label, style = style)
         Spacer(Modifier.weight(1f))
-        oldNumber?.takeIf { it != value }?.let {
+        oldNumber?.takeIf { it != value && value != null }?.let {
+            val triangleChar = if (value!!.toInt() > it.toInt()) "+" else ""
             Text(text = "${it.toInt()}${unit.suffix}",
                 style = style.copy(textDecoration = TextDecoration.LineThrough, fontWeight = FontWeight.Light),
-                modifier = Modifier.padding(end = 4.dp))
+                textAlign = TextAlign.End,
+                modifier = Modifier.requiredWidth(64.dp))
+
+            Text(text = "$triangleChar${value.toInt() - it.toInt()}",
+                style = style.copy(fontWeight = FontWeight.Light),
+                textAlign = TextAlign.End,
+                modifier = Modifier.requiredWidth(64.dp))
+
+
         }
         Text(
             text = value?.let { "${it.toInt()}${unit.suffix}" } ?: "N/A", style = style,
             textAlign = TextAlign.End,
-            modifier = Modifier.widthIn(min = 72.dp)
+            modifier = Modifier.requiredWidth(64.dp)
         )
     }
 }
 
 @Composable
 fun MenuCreation(item: MenuItem, goals: List<NutritionGoal>) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -267,13 +336,39 @@ fun MenuCreation(item: MenuItem, goals: List<NutritionGoal>) {
             HorizontalDivider()
             item.appliedCustomizations.forEachIndexed { index, customization ->
                 CustomizationItem(customization, goals)
-                if (index < item.appliedCustomizations.size - 1) {
+                Spacer(modifier = Modifier.height(1.dp))
+            }
+            Text(
+                text = "More options",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            item.availableCustomizations.forEachIndexed { index, customization ->
+                CustomizationItem(customization, goals)
+                if (index < item.availableCustomizations.size - 1) {
                     Spacer(modifier = Modifier.height(1.dp))
                 }
             }
         }
     }
 }
+
+@Composable
+fun OptionalAdditions(item: MenuItem, goals: List<NutritionGoal>) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            item.availableCustomizations.forEachIndexed { index, customization ->
+                CustomizationItem(customization, goals)
+                if (index < item.availableCustomizations.size - 1) {
+                    Spacer(modifier = Modifier.height(1.dp))
+                }
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

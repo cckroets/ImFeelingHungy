@@ -37,8 +37,7 @@ fun NutritionalInformation.add(other: NutritionalInformation): NutritionalInform
 fun MenuItem.calculateFinalNutrition(): NutritionalInformation {
     return appliedCustomizations
         .mapNotNull { it.nutritionDifference }
-        .reduce { acc, nutritionalInformation -> acc.add(nutritionalInformation) }
-        .add(originalNutrition)
+        .fold(originalNutrition) { acc, nutritionalInformation -> acc.add(nutritionalInformation) }
 }
 
 // Reason nested data class

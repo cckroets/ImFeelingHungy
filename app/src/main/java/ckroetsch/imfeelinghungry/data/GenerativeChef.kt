@@ -4,26 +4,24 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.util.Log
 import com.google.firebase.Firebase
+import com.google.firebase.vertexai.type.BlockThreshold
 import com.google.firebase.vertexai.type.Content
+import com.google.firebase.vertexai.type.GenerateContentResponse
+import com.google.firebase.vertexai.type.GenerationConfig
+import com.google.firebase.vertexai.type.HarmCategory
+import com.google.firebase.vertexai.type.SafetySetting
 import com.google.firebase.vertexai.type.content
 import com.google.firebase.vertexai.vertexAI
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onErrorResume
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToStream
-import kotlinx.serialization.json.internal.writeJson
-import java.io.File
-import kotlin.coroutines.CoroutineContext
 
 sealed class Result<out T> {
     data class Success<T>(
@@ -56,15 +54,103 @@ class GenerativeChef(
         $schema
     """.trimIndent()
 
+    private val generationConfig = GenerationConfig.Builder().apply {
+        this.candidateCount = 1
+    }.build()
+
     private val model = Firebase.vertexAI.generativeModel(
         modelName = "gemini-1.5-flash",
-        systemInstruction = content { text(systemInstruction) }
+        generationConfig = generationConfig,
+        systemInstruction = content { text(systemInstruction) },
+        safetySettings = HarmCategory.entries.map { SafetySetting(it, BlockThreshold.NONE)}
+            .filter { it.harmCategory != HarmCategory.UNKNOWN }
     )
 
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
         explicitNulls = false
+    }
+
+    private val chat by lazy { model.startChat() }
+
+    fun regenerateWithInstructions(instructions: String): Flow<Result<MenuItem>> {
+        return flow {
+            emit(Result.Loading)
+            handleResponse(
+                chat.sendMessageStream(
+                    """
+                    Regenerate the menu items with the same instructions, but with the following suggestion: $instructions
+                    """.trimIndent()
+                )
+            )
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun generateFromChat(): Flow<Result<MenuItem>> {
+        val restaurants = userPreferences.restaurantPreferences.likedOptionsAsInput()
+        val food = userPreferences.foodPreferences.likedOptionsAsInput()
+        val diet = userPreferences.dietaryPreferences.likedOptionsAsInput()
+
+        val prompt = """
+            Generate a custom menu 'hack' item from one of the following restaurants: $restaurants that
+            best matches these food preferences: $food and dietary preferences: $diet. Do not suggest other diets.
+            Feel free to make modifications to the menu item as needed (add/remove/substitute).
+        """.trimIndent()
+
+        val content: Content = content {
+            text(prompt)
+        }
+
+        return flow {
+            emit(Result.Loading)
+            if (!UseGenAi) {
+                emit(Result.Success(loadResponseFromFile()))
+                return@flow
+            }
+
+            Log.i(TAG, "Generating menu item for $food, $diet, $restaurants")
+            var result = ""
+            var emittedError = false
+            handleResponse(chat.sendMessageStream(content))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private suspend fun FlowCollector<Result<MenuItem>>.handleResponse(
+        response: Flow<GenerateContentResponse>
+    ) {
+        var result = ""
+        var emittedError = false
+        response.flowOn(Dispatchers.IO).catch { e ->
+            Log.e(TAG, "Failed to generate content: ${e.message}", IllegalStateException(e))
+            emittedError = true
+            emit(Result.Error("Failed to generate content: ${e.message}"))
+        }.collect { chunk ->
+            Log.i(TAG, "Chunk received")
+            result += chunk.text
+        }
+        if (result.isEmpty() || emittedError) {
+            return
+        }
+        val final = result
+            .removePrefix("```json\n")
+            .removeSuffix("\n```")
+            .let {
+                try {
+                    Log.i(TAG, "Decoding JSON response...")
+                    val item = json.decodeFromString<MenuItem>(it)
+                    Log.i(TAG, "Saving to local File...")
+                    saveResponseToFile(item)
+                    Result.Success(item)
+                } catch (e: Exception) {
+                    if (e is SerializationException) {
+                        Log.i(TAG, it)
+                    }
+                    Log.e("GenerativeChef", "Failed to parse JSON", e)
+                    Result.Error("Failed to parse JSON: ${e.message}")
+                }
+            }
+        emit(final)
     }
 
     fun generateMenuItem(): Flow<Result<MenuItem>> {

@@ -15,13 +15,6 @@ class HungryApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         Firebase.initialize(context = this)
-        Firebase.appCheck.installAppCheckProviderFactory(provider)
-    }
-
-    private val provider = if (BuildConfig.DEBUG) {
-        DebugAppCheckProviderFactory.getInstance()
-    } else {
-        PlayIntegrityAppCheckProviderFactory.getInstance()
     }
 
     override fun newImageLoader(): ImageLoader {

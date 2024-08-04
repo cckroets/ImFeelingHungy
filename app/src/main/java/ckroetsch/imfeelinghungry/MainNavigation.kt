@@ -1,8 +1,11 @@
 package ckroetsch.imfeelinghungry
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +26,7 @@ import ckroetsch.imfeelinghungry.data.Result
 import ckroetsch.imfeelinghungry.onboarding.DietaryPreferenceScreen
 import ckroetsch.imfeelinghungry.onboarding.FoodScreen
 import ckroetsch.imfeelinghungry.onboarding.RestaurantScreen
+import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -38,23 +42,36 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
     }
 
     if (startDestination != null) {
-        SharedTransitionLayout {
+        SharedTransitionLayout(modifier = Modifier.background(MustardYellow)) {
+            val sharedElementScope = this
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = startDestination!!) {
-                composable("welcome") { WelcomeScreen(navController = navController) }
+            NavHost(
+                navController = navController,
+                startDestination = startDestination!!
+            ) {
+                composable("welcome") { WelcomeScreen(Modifier, sharedElementScope, this, navController) }
                 composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
                 composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
                 composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
-                composable("generateOrder") { GeneratedOrderScreen(viewModel = viewModel, navController = navController) }
+                composable("generateOrder") {
+                    GeneratedOrderScreen(
+                        viewModel = viewModel,
+                        navController = navController,
+                        sharedElementScope = sharedElementScope,
+                        animatedVisibilityScope = this
+                ) }
                 // Add other destinations here
             }
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GeneratedOrderScreen(
     modifier: Modifier = Modifier,
+    sharedElementScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
@@ -68,12 +85,10 @@ fun GeneratedOrderScreen(
             is Result.Error -> {
                 Text(text = "Error: ${m.message}")
             }
-
             Result.Loading -> {
-                LoadingAnimation()
-                // Add other composable content her
+                //PhsyicsExample()
+                LoadingAnimation(sharedElementScope, animatedVisibilityScope)
             }
-
             is Result.Success -> {
                 val goals = remember(viewModel) { viewModel.dietGoals }
                 MenuItemScreen(

@@ -1,12 +1,16 @@
 package ckroetsch.imfeelinghungry
 
 import android.graphics.Paint
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -29,6 +33,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ckroetsch.imfeelinghungry.ui.theme.ImFeelingHungryTheme
+import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -166,11 +171,26 @@ fun PreviewVegetableTossAnimation() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
-fun LoadingAnimation() {
-    Box(Modifier.fillMaxSize()) {
-        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
-        LottieAnimation(composition, iterations = 100)
+fun LoadingAnimation(
+    sharedElementScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+) {
+    with(sharedElementScope) {
+        Box(Modifier.fillMaxSize()) {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+            val sharedState = rememberSharedContentState("pan")
+            LottieAnimation(
+                composition = composition,
+                iterations = 100,
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = sharedState,
+                        //placeHolderSize = SharedTransitionScope.PlaceHolderSize(),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+            )
+        }
     }
 }

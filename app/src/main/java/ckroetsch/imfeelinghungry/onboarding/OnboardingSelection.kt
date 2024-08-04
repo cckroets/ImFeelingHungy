@@ -22,6 +22,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -43,7 +45,7 @@ import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 
 data class Restaurant(
     val name: String,
-    val imageUrl: String,
+    val imageUrl: Int,
 )
 
 data class Food(
@@ -203,26 +205,17 @@ val AllPreferences = DietType.entries.map { dietType ->
  */
 
 val AllRestaurants = listOf(
-    Restaurant("McDonald's", "https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo-500x281.png"),
-    Restaurant("Wendy's", "https://1000logos.net/wp-content/uploads/2017/08/Wendys-Logo-500x166.png"),
-    Restaurant("Starbucks", "https://1000logos.net/wp-content/uploads/2023/04/Starbucks-logo-500x281.png"),
-    Restaurant("Chick-fil-A", "https://seeklogo.com/images/C/chick-fil-a-logo-3528751D14-seeklogo.com.png"),
-    Restaurant("Subway", "https://1000logos.net/wp-content/uploads/2017/06/Subway-logo-500x278.png"),
-    Restaurant("Pizza Hut", "https://1000logos.net/wp-content/uploads/2017/05/Pizza-Hut-logo-500x345.png"),
-    Restaurant("Taco Bell", "https://brandslogos.com/wp-content/uploads/images/large/taco-bell-logo-1.png"),
-    Restaurant("Domino's Pizza", "https://brandslogos.com/wp-content/uploads/images/large/dominos-logo.png"),
-    Restaurant("Burger King", "https://brandslogos.com/wp-content/uploads/images/large/burger-king-logo.png"),
-    Restaurant("Dunkin", "https://seeklogo.com/images/D/dunkin-logo-9395D53B67-seeklogo.com.png"),
-    Restaurant("KFC", "https://seeklogo.com/images/K/kfc-new-logo-72E6348046-seeklogo.com.png"),
-    Restaurant("Olive Garden", "https://seeklogo.com/images/O/olive-garden-logo-E35EBA47ED-seeklogo.com.png"),
-    Restaurant("iHOP", "https://seeklogo.com/images/I/ihop-logo-773205CEC6-seeklogo.com.png"),
-    Restaurant("Chipotle", "https://seeklogo.com/images/C/chipotle-mexican-grill-logo-0B3A1AD1EE-seeklogo.com.png"),
-    Restaurant("Panera Bread", "https://seeklogo.com/images/P/panera-bread-logo-1A9D50E5CA-seeklogo.com.png"),
-    Restaurant("Popeyes", "https://seeklogo.com/images/P/popeyes-logo-A358FB175D-seeklogo.com.png"),
-    Restaurant("Jack in the box", "https://seeklogo.com/images/J/jack-in-the-box-logo-1E1F3133BF-seeklogo.com.png"),
-    Restaurant("Five Guys", "https://seeklogo.com/images/F/five-guys-logo-EE87090C5B-seeklogo.com.png"),
-    Restaurant("In n Out", "https://seeklogo.com/images/I/In-N-Out_Burger-logo-55D778023E-seeklogo.com.png"),
-    Restaurant("Jollibee", "https://seeklogo.com/images/J/Jollibee-logo-CBD5940475-seeklogo.com.png"),
+    Restaurant("McDonald's", R.drawable.icons_mcdonalds),
+    Restaurant("Wendy's", R.drawable.icons_wendys),
+    Restaurant("Starbucks", R.drawable.icons_starbucks),
+    Restaurant("Chick-fil-A", R.drawable.icons_chikfile),
+    Restaurant("Subway", R.drawable.icons_subway),
+    Restaurant("Taco Bell", R.drawable.icons_taco_bell),
+    Restaurant("Burger King", R.drawable.icons_burgerking),
+    Restaurant("KFC", R.drawable.icons_kfc),
+    Restaurant("Chipotle", R.drawable.icons_chipotle),
+    Restaurant("Five Guys", R.drawable.icons_fiveguys),
+    Restaurant("In n Out", R.drawable.icons_innout),
 )
 
 
@@ -233,38 +226,40 @@ fun OnboardingNavigator(
     nextPage: String,
     prevPage: String = "welcome"
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .background(Color.Transparent)
+    Card(colors = CardDefaults.outlinedCardColors(containerColor = Color.White)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .background(Color.Transparent)
 
 
-    ) {
-        IconButton(
-            onClick = { navController.navigate(prevPage) },
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(22.dp)
-                    .scale(2f), // Scale up the icon,
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                tint = DarkOrange
-            )
-        }
+            IconButton(
+                onClick = { navController.navigate(prevPage) },
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(22.dp)
+                        .scale(2f), // Scale up the icon,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = DarkOrange
+                )
+            }
 
-        IconButton(
-            onClick = { navController.navigate(nextPage) },
-        ) {
-            Icon(
-                modifier = Modifier
-                    .size(22.dp)
-                    .scale(2f), // Scale up the icon,
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-                tint = DarkOrange
-            )
+            IconButton(
+                onClick = { navController.navigate(nextPage) },
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(22.dp)
+                        .scale(2f), // Scale up the icon,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    tint = DarkOrange
+                )
+            }
         }
     }
 }

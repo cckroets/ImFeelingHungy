@@ -20,8 +20,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -114,27 +116,22 @@ fun DietaryPreferencePill(
     select: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val color = if (isSelected) DarkOrange else Color(0xFF38571A)
-    val icon = if (isSelected) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
-    Row(
-        verticalAlignment = Alignment.CenterVertically, // Ensured vertical alignment
-        horizontalArrangement = Arrangement.Start, // Ensured horizontal arrangement
-        modifier = modifier
-            .fillMaxWidth() // Ensured full width to accommodate text
-            .clip(RoundedCornerShape(50))
-            .clickable { select(!isSelected) }
-            .background(color, RoundedCornerShape(50))
-            .padding(horizontal = 16.dp, vertical = 8.dp) // Adjusted padding
+    OutlinedCard(
+        colors = CardDefaults.outlinedCardColors(containerColor = Color.White),
+        border = CardDefaults.outlinedCardBorder(isSelected)
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color.White // Ensured icon color is visible
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = preference.name,
-            color = Color.White // Ensured text color is visible
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically, // Ensured vertical alignment
+            horizontalArrangement = Arrangement.Start, // Ensured horizontal arrangement
+            modifier = modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { select(!isSelected) }
+                .padding(horizontal = 16.dp, vertical = 8.dp) // Adjusted padding
+        ) {
+            Text(
+                text = preference.name,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
     }
 }

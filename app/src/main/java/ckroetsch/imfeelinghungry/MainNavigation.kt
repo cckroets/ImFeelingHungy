@@ -25,7 +25,7 @@ import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Result
 import ckroetsch.imfeelinghungry.onboarding.DietaryPreferenceScreen
 import ckroetsch.imfeelinghungry.onboarding.FoodScreen
-import ckroetsch.imfeelinghungry.onboarding.RestaurantScreen
+import ckroetsch.imfeelinghungry.onboarding.OnboardingScreen
 import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import kotlinx.coroutines.launch
 
@@ -50,7 +50,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
                 startDestination = startDestination!!
             ) {
                 composable("welcome") { WelcomeScreen(Modifier, sharedElementScope, this, navController) }
-                composable("restaurant") { RestaurantScreen(viewModel = viewModel, navController = navController) }
+                composable("restaurant") { OnboardingScreen(viewModel = viewModel, navController = navController) }
                 composable("food") { FoodScreen(viewModel = viewModel, navController = navController) }
                 composable("dietaryPreference") { DietaryPreferenceScreen(viewModel = viewModel, navController = navController) }
                 composable("generateOrder") {

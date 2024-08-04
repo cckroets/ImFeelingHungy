@@ -12,13 +12,13 @@ data class MenuItem(
     val reasons: List<Reason>,
     val originalNutrition: NutritionalInformation,
     val appliedCustomizations: List<MenuCustomization>,
-    val availableCustomizations: List<MenuCustomization>,
     val redoModifiers: List<String>
 )
 
 // Add 2 NutritionalInformation objects
 fun NutritionalInformation.add(other: NutritionalInformation): NutritionalInformation {
     return NutritionalInformation(
+        servingSize = this.servingSize,
         calories = this.calories?.plus(other.calories ?: 0),
         caloriesFromFat = this.caloriesFromFat?.plus(other.caloriesFromFat ?: 0),
         carbohydrateContent = this.carbohydrateContent?.plus(other.carbohydrateContent ?: 0.0),
@@ -50,6 +50,7 @@ data class Reason(
 // NutritionalInformation nested data class
 @Serializable
 data class NutritionalInformation(
+    val servingSize: String?,
     val calories: Int?,
     val caloriesFromFat: Int?,
     val carbohydrateContent: Double?,

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
-  "required": ["restaurantName", "menuItemTitle", "reasons", "creationTitle", "creationDescription", "originalNutrition", "appliedCustomizations", "availableCustomizations", "redoModifiers"],
+  "required": ["restaurantName", "menuItemTitle", "reasons", "creationTitle", "creationDescription", "originalNutrition", "appliedCustomizations", "redoModifiers"],
   "properties": {
     "restaurantName": {
       "type": "string",
@@ -9,7 +9,7 @@
     },
     "creationTitle": {
       "type": "string",
-      "description": "Creative title for this unique menu item creation"
+      "description": "Creative title for this unique menu item creation. DO NOT ADD ANY QUOTES!"
     },
     "creationDescription": {
       "type": "string",
@@ -33,21 +33,14 @@
     },
     "appliedCustomizations": {
       "type": "array",
-      "description": "List of customizations already applied to this menu item",
-      "items": {
-        "$ref": "#/definitions/MenuCustomization"
-      }
-    },
-    "availableCustomizations": {
-      "type": "array",
-      "description": "List of available customizations for this menu item. The title should be verbs such as (Add Cheese, etc)",
+      "description": "List of customizations applied to this menu item",
       "items": {
         "$ref": "#/definitions/MenuCustomization"
       }
     },
     "redoModifiers": {
       "type": "array",
-      "description": "List of modifiers for re-generating the menu item (e.g. More Protein, Less Sugar)",
+      "description": "List of modifiers for re-generating the menu item (e.g. More Protein, Less Sugar) based on dietary goals",
       "items": {
         "type": "string"
       }
@@ -72,6 +65,10 @@
       "type": "object",
       "description": "Nutritional information details",
       "properties": {
+        "servingSize": {
+          "type": "string",
+          "description": "Serving size (e.g. 1 sandwich, 1 cup, 1 slice)"
+        },
         "calories": {
           "type": "integer",
           "description": "Total Calorie count"

@@ -99,8 +99,6 @@ class GenerativeChef(
             it.isNotEmpty()
         }?: listOf(AllPreferences.take(1).map{it.name})
 
-
-
         val prompt = """
             Generate a custom menu 'hack' item from one of the following restaurants: $restaurants that
             best matches the dietary preferences: $diet. Do not suggest other diets.

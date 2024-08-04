@@ -220,6 +220,9 @@ fun ReasonItem(reason: Reason) {
 fun NutritionalLabel(nutrition: NutritionalInformation, oldNutrition: NutritionalInformation) {
     MenuCard {
         Column(modifier = Modifier.padding(8.dp).padding(end = 16.dp)) {
+            nutrition.servingSize?.let {
+                Text(text = "Serving Size: $it", style = MaterialTheme.typography.bodySmall)
+            }
             NutritionRow("Calories", isTopLevel = true, nutrition.calories, oldNutrition.calories, NutritionUnit.CALORIES)
             NutritionRow("Total Fat", isTopLevel = true, nutrition.fatContent, oldNutrition.fatContent, NutritionUnit.GRAMS)
             NutritionRow("Saturated Fat", isTopLevel = false, nutrition.saturatedFatContent, oldNutrition.saturatedFatContent, NutritionUnit.GRAMS)
@@ -365,37 +368,19 @@ fun MenuCreation(item: MenuItem, goals: List<NutritionGoal>) {
                 CustomizationItem(customization, goals)
                 Spacer(modifier = Modifier.height(1.dp))
             }
-            Text(
-                text = "More options",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            item.availableCustomizations.forEachIndexed { index, customization ->
-                CustomizationItem(customization, goals)
-                if (index < item.availableCustomizations.size - 1) {
-                    Spacer(modifier = Modifier.height(1.dp))
-                }
-            }
+            //Text(
+            //    text = "More options",
+            //    style = MaterialTheme.typography.bodyMedium
+            //)
+            //item.availableCustomizations.forEachIndexed { index, customization ->
+            //    CustomizationItem(customization, goals)
+            //    if (index < item.availableCustomizations.size - 1) {
+            //        Spacer(modifier = Modifier.height(1.dp))
+            //    }
+            //}
         }
     }
 }
-
-@Composable
-fun OptionalAdditions(item: MenuItem, goals: List<NutritionGoal>) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            item.availableCustomizations.forEachIndexed { index, customization ->
-                CustomizationItem(customization, goals)
-                if (index < item.availableCustomizations.size - 1) {
-                    Spacer(modifier = Modifier.height(1.dp))
-                }
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

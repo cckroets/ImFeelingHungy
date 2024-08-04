@@ -38,7 +38,7 @@ sealed class Result<out T> {
     data object Loading : Result<Nothing>()
 }
 
-val UseGenAi = true
+val UseGenAi = false
 
 private const val TAG = "GenerativeChef"
 

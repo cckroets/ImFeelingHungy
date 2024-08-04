@@ -63,8 +63,10 @@ import ckroetsch.imfeelinghungry.data.NutritionUnit
 import ckroetsch.imfeelinghungry.data.NutritionalInformation
 import ckroetsch.imfeelinghungry.data.Reason
 import ckroetsch.imfeelinghungry.data.calculateFinalNutrition
+import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
 import ckroetsch.imfeelinghungry.onboarding.Amount
 import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
+import ckroetsch.imfeelinghungry.onboarding.NutritionalGain
 import ckroetsch.imfeelinghungry.onboarding.toGains
 import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import ckroetsch.imfeelinghungry.ui.theme.Green30
@@ -177,7 +179,7 @@ fun MenuItemScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Regenerate",
+                    text = "Refine",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = paddedModifier
                 )
@@ -195,6 +197,32 @@ fun MenuItemScreen(
                         ) {
                             Text(text = redoText)
                         }
+                    }
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "More Options",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = paddedModifier
+                )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scrollable(rememberScrollState(), orientation = Orientation.Horizontal),
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    items(AllRestaurants) { restaurant ->
+                        Button(
+                            onClick = { onRegenerate(restaurant.name) },
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                        ) {
+                            Text(text = restaurant.name)
+                        }
+
                     }
                 }
             }

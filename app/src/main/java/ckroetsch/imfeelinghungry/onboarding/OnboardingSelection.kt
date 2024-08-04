@@ -5,34 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -54,8 +38,7 @@ data class Food(
 )
 
 data class Diet(
-    val name: String,
-    val imageUrl: String,
+    val name: String
 )
 
 enum class Amount {
@@ -136,49 +119,50 @@ val AllFoods = listOf(
 
 enum class DietType(
     val idName: String,
-    val imageUrl: String,
+    val emojis: List<String>,
     val goals: List<NutritionGoal>
 ) {
-    HIGH_PROTEIN("High Protein", "", listOf(
+    HIGH_PROTEIN("High Protein", listOf("\uD83D\uDCAA"), listOf(
         NutritionGoal(Amount.HIGH, NutritionMetric.PROTEIN)
     )),
-    HIGH_FIBER("High Fiber", "", listOf(
+    HIGH_FIBER("High Fiber", listOf("\uD83E\uDD66"), listOf(
         NutritionGoal(Amount.HIGH, NutritionMetric.FIBER)
     )),
-    HIGH_IRON("High Iron", "", listOf(
+    LOW_FOOTPRINT("Low Carbon Footprint", listOf("\uD83C\uDF0E"), listOf()),
+    HIGH_IRON("High Iron", listOf("\uD83C\uDFCB\uFE0F\u200D♀\uFE0F"), listOf(
         NutritionGoal(Amount.HIGH, NutritionMetric.IRON)
     )),
-    VEGAN("Vegan", "", listOf()),
-    VEGETARIAN("Vegetarian", "", listOf()),
-    KETO("Keto", "", listOf(
+    VEGAN("Vegan", listOf("\uD83C\uDF31", "\uD83E\uDD51", "\uD83E\uDD55"), listOf()),
+    VEGETARIAN("Vegetarian", listOf("\uD83E\uDD66", "\uD83C\uDF45"), listOf()),
+    KETO("Keto", listOf("\uD83E\uDD51", "\uD83E\uDD53", "\uD83E\uDDC0"), listOf(
         NutritionGoal(Amount.HIGH, NutritionMetric.PROTEIN),
         NutritionGoal(Amount.LOW, NutritionMetric.CALORIES),
         NutritionGoal(Amount.LOW, NutritionMetric.CARBOHYDRATES)
     )),
-    GLUTEN_FREE("Gluten Free", "", listOf()),
-    DAIRY_FREE("Dairy Free", "", listOf()),
-    LOW_CARB("Low Carb", "", listOf(
+    GLUTEN_FREE("Gluten Free", emptyList(), listOf()),
+    DAIRY_FREE("Dairy Free", emptyList(), listOf()),
+    LOW_CARB("Low Carb", emptyList(), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.CARBOHYDRATES)
     )),
-    LOW_FAT("Low Fat", "", listOf(
+    LOW_FAT("Low Fat", emptyList(), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.FAT)
     )),
-    LOW_CALORIE("Low Calorie", "", listOf(
+    LOW_CALORIE("Low Calorie", listOf("⚖\uFE0F"), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.CALORIES)
     )),
-    LOW_SUGAR("Low Sugar", "", listOf(
+    LOW_SUGAR("Low Sugar", emptyList(), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.TOTAL_SUGAR)
     )),
-    LOW_SODIUM("Low Sodium", "", listOf(
+    LOW_SODIUM("Low Sodium", emptyList(), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.SODIUM)
     )),
-    LOW_CHOLESTEROL("Low Cholesterol", "", listOf(
+    LOW_CHOLESTEROL("Low Cholesterol", emptyList(), listOf(
         NutritionGoal(Amount.LOW, NutritionMetric.CHOLESTEROL)
     ))
 }
 
 val AllPreferences = DietType.entries.map { dietType ->
-    Diet(dietType.idName, dietType.imageUrl)
+    Diet(dietType.idName)
 }
 
 /**

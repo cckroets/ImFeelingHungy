@@ -178,10 +178,8 @@ fun MenuItemScreen(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-           
                 MenuLabel(
                     text = "Refine this creation",
-
                     modifier = paddedModifier
                 )
                 LazyRow(
@@ -205,9 +203,8 @@ fun MenuItemScreen(
 
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
+                MenuLabel(
                     text = "More Options",
-                    style = MaterialTheme.typography.labelMedium,
                     modifier = paddedModifier
                 )
                 LazyRow(
@@ -218,6 +215,7 @@ fun MenuItemScreen(
                 ) {
                     items(AllRestaurants) { restaurant ->
                         Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = DarkOrange),
                             onClick = { onRegenerate(restaurant.name) },
                             modifier = Modifier
                                 .padding(end = 8.dp)

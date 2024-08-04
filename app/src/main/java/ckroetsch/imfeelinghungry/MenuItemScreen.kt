@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,6 +66,7 @@ import ckroetsch.imfeelinghungry.data.calculateFinalNutrition
 import ckroetsch.imfeelinghungry.onboarding.Amount
 import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
 import ckroetsch.imfeelinghungry.onboarding.toGains
+import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import ckroetsch.imfeelinghungry.ui.theme.Green30
 import ckroetsch.imfeelinghungry.ui.theme.Red30
 import kotlinx.coroutines.launch
@@ -79,7 +81,7 @@ fun MenuItemScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
-        //containerColor = Color.Transparent,
+        containerColor = Color.White,
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
             //.background(
@@ -89,6 +91,11 @@ fun MenuItemScreen(
             //),
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = DarkOrange,
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                ),
                 title = {
                         Text(
                             menuItem.restaurantName,
@@ -112,13 +119,13 @@ fun MenuItemScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
-                start = padding.calculateStartPadding(LayoutDirection.Ltr),
-                end = padding.calculateEndPadding(LayoutDirection.Ltr),
+                start = 0.dp,
+                end = 0.dp,
                 top = padding.calculateTopPadding() + 16.dp,
                 bottom = padding.calculateBottomPadding()
             )
         ) {
-            val paddedModifier = Modifier.padding(horizontal = 16.dp)
+            val paddedModifier = Modifier.padding(horizontal = 12.dp)
             item {
                 Text(
                     text = menuItem.creationTitle ?: menuItem.menuItemTitle,
@@ -472,19 +479,18 @@ fun GenerativeAICard(
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
             .border(
                 border = BorderStroke(
-                    width = 4.dp,
+                    width = 3.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(Color.Cyan, Color.Magenta, Color.Blue, Color.Green)
                     )
                 ),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(8.dp)
             ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
-        )
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
             modifier = Modifier

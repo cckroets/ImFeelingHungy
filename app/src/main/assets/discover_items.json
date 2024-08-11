@@ -468,5 +468,507 @@
       "Add Onions",
       "Add Pickles"
     ]
+  },
+  {
+    "restaurantName": "Chipotle",
+    "creationTitle": "The Veggie Fiesta Bowl",
+    "creationDescription": "A vibrant and satisfying bowl bursting with fresh veggies and flavorful ingredients, perfect for vegetarians.  Enjoy a medley of brown rice, black beans, fajita veggies, romaine lettuce, salsa, and a creamy guacamole topping, all seasoned with a tangy cilantro-lime dressing.",
+    "menuItemTitle": "Vegetarian Bowl",
+    "reasons": [
+      {
+        "title": "🌱 Vegetarian Delight",
+        "description": "This bowl is entirely plant-based, offering a delicious and satisfying meal that aligns perfectly with your vegetarian dietary preferences."
+      },
+      {
+        "title": "🌶️ Flavorful & Fresh",
+        "description": "The combination of fresh vegetables, flavorful rice and beans, and zesty toppings creates a unique and satisfying flavor profile that will leave you feeling energized and happy."
+      },
+      {
+        "title": "🥑 Healthy Choice",
+        "description": "Loaded with nutritious vegetables, brown rice, and a healthy dose of fiber, this bowl is a great choice for a wholesome and satisfying meal."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 bowl",
+      "calories": 650,
+      "caloriesFromFat": 250,
+      "carbohydrateContent": 75.0,
+      "cholesterolContent": 10.0,
+      "fatContent": 20.0,
+      "fiberContent": 15.0,
+      "proteinContent": 25.0,
+      "saturatedFatContent": 5.0,
+      "sodiumContent": 800.0,
+      "ironContent": 5.0,
+      "sugarContent": 10.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Choose",
+        "ingredient": "Brown Rice",
+        "reason": "Provides a hearty base with complex carbohydrates and fiber.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 200,
+          "caloriesFromFat": 10,
+          "carbohydrateContent": 40.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 2.0,
+          "fiberContent": 5.0,
+          "proteinContent": 5.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 100.0,
+          "ironContent": 2.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Choose",
+        "ingredient": "Black Beans",
+        "reason": "A source of plant-based protein and fiber, adding a hearty texture to the bowl.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 150,
+          "caloriesFromFat": 20,
+          "carbohydrateContent": 25.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 5.0,
+          "fiberContent": 8.0,
+          "proteinContent": 10.0,
+          "saturatedFatContent": 1.0,
+          "sodiumContent": 150.0,
+          "ironContent": 3.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Choose",
+        "ingredient": "Fajita Veggies",
+        "reason": "A colorful blend of bell peppers and onions, adding flavor and texture.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 100,
+          "caloriesFromFat": 10,
+          "carbohydrateContent": 15.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 2.0,
+          "fiberContent": 3.0,
+          "proteinContent": 2.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 50.0,
+          "ironContent": 1.0,
+          "sugarContent": 5.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Choose",
+        "ingredient": "Romaine Lettuce",
+        "reason": "Adds a refreshing crunch and a boost of vitamins and minerals.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 15,
+          "caloriesFromFat": 5,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 1.0,
+          "fiberContent": 1.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 10.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Salsa",
+        "reason": "A burst of fresh flavor and a touch of spice to complement the other ingredients.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 20,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 5.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 100.0,
+          "ironContent": 0.0,
+          "sugarContent": 5.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Guacamole",
+        "reason": "Adds a creamy and flavorful touch, providing healthy fats and a boost of fiber.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 150,
+          "caloriesFromFat": 120,
+          "carbohydrateContent": 5.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 15.0,
+          "fiberContent": 3.0,
+          "proteinContent": 2.0,
+          "saturatedFatContent": 2.0,
+          "sodiumContent": 50.0,
+          "ironContent": 0.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Cilantro-Lime Dressing",
+        "reason": "A tangy and refreshing dressing that brings all the flavors together.",
+        "nutritionDifference": {
+          "servingSize": "1 bowl",
+          "calories": 50,
+          "caloriesFromFat": 40,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 5.0,
+          "fiberContent": 0.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 1.0,
+          "sodiumContent": 50.0,
+          "ironContent": 0.0,
+          "sugarContent": 2.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "More Veggies",
+      "Less Rice",
+      "Add Corn Salsa",
+      "Substitute Black Beans with Pinto Beans",
+      "Double Guacamole"
+    ]
+  },
+  {
+    "restaurantName": "Subway",
+    "creationTitle": "Subway Lean & Green",
+    "creationDescription": "A customized Subway Veggie Delight sandwich with lean protein and low-fat toppings. It’s a delicious and satisfying meal that's perfect for anyone looking for a healthy and low-calorie option.",
+    "menuItemTitle": "Subway Veggie Delight",
+    "reasons": [
+      {
+        "title": "🥗 Low Calorie & Fat",
+        "description": "This creation is packed with veggies and lean protein, making it a light and healthy meal option."
+      },
+      {
+        "title": "🌱  Plant-Based Goodness",
+        "description": "It's a great choice for those following a vegetarian or vegan diet, as it's packed with fresh veggies and plant-based protein."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 6-inch sub",
+      "calories": 320,
+      "caloriesFromFat": 100,
+      "carbohydrateContent": 44.0,
+      "cholesterolContent": 5.0,
+      "fatContent": 11.0,
+      "fiberContent": 6.0,
+      "proteinContent": 15.0,
+      "saturatedFatContent": 3.0,
+      "sodiumContent": 650.0,
+      "ironContent": 4.0,
+      "sugarContent": 5.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Choose",
+        "ingredient": "Turkey Breast",
+        "reason": "Provides lean protein without adding excess fat or calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 15,
+          "caloriesFromFat": 5,
+          "carbohydrateContent": 0.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 1.0,
+          "fiberContent": 0.0,
+          "proteinContent": 7.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 100.0,
+          "ironContent": 1.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Lettuce",
+        "reason": "Adds volume and freshness to the sandwich without adding any fat or calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Tomato",
+        "reason": "Adds vitamins and antioxidants to the sandwich without adding any fat or calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Cucumber",
+        "reason": "Adds crunch and hydration to the sandwich without adding any fat or calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Green Peppers",
+        "reason": "Adds flavor and vitamins to the sandwich without adding any fat or calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Onion",
+        "reason": "Adds a bit of savory flavor without adding significant calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 10,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Choose",
+        "ingredient": "Mustard",
+        "reason": "Low-calorie condiment that adds a tangy flavor to the sandwich.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 0.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "More Protein",
+      "More Veggies",
+      "Less Bread",
+      "No Cheese"
+    ]
+  },
+  {
+    "restaurantName": "Taco Bell",
+    "creationTitle": "Taco Bell Lean & Green",
+    "creationDescription": "A customized Chicken Soft Taco with lean protein and low-fat toppings, perfect for a quick and satisfying meal. It’s a delicious and healthy option.",
+    "menuItemTitle": "Chicken Soft Taco",
+    "reasons": [
+      {
+        "title": "🌮 Low Calorie & Fat",
+        "description": "This creation swaps out traditional toppings for a lighter and healthier take on a classic Taco Bell favorite."
+      },
+      {
+        "title": "🌶️ Flavorful & Filling",
+        "description": "The combination of spices and fresh ingredients creates a satisfying meal without sacrificing flavor."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 Taco",
+      "calories": 170,
+      "caloriesFromFat": 60,
+      "carbohydrateContent": 16.0,
+      "cholesterolContent": 10.0,
+      "fatContent": 7.0,
+      "fiberContent": 2.0,
+      "proteinContent": 10.0,
+      "saturatedFatContent": 2.0,
+      "sodiumContent": 470.0,
+      "ironContent": 2.0,
+      "sugarContent": 1.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Substitute",
+        "ingredient": "Grilled Chicken",
+        "reason": "Grilled chicken provides a leaner protein option compared to the seasoned beef, reducing fat content.",
+        "substituted": "Seasoned Beef",
+        "nutritionDifference": {
+          "servingSize": "1 Taco",
+          "calories": -20,
+          "caloriesFromFat": -10,
+          "carbohydrateContent": 0.0,
+          "cholesterolContent": 0.0,
+          "fatContent": -2.0,
+          "fiberContent": 0.0,
+          "proteinContent": 2.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -50.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Remove",
+        "ingredient": "Sour Cream",
+        "reason": "Sour cream is a high-fat topping. Removing it helps keep the taco light and low-calorie.",
+        "nutritionDifference": {
+          "servingSize": "1 Taco",
+          "calories": -25,
+          "caloriesFromFat": -20,
+          "carbohydrateContent": -1.0,
+          "cholesterolContent": -5.0,
+          "fatContent": -2.0,
+          "fiberContent": 0.0,
+          "proteinContent": -1.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -5.0,
+          "ironContent": 0.0,
+          "sugarContent": -1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Remove",
+        "ingredient": "Cheese",
+        "reason": "Cheese is a high-fat ingredient that can contribute to calories. Removing it helps keep the taco low-fat.",
+        "nutritionDifference": {
+          "servingSize": "1 Taco",
+          "calories": -40,
+          "caloriesFromFat": -30,
+          "carbohydrateContent": -1.0,
+          "cholesterolContent": -5.0,
+          "fatContent": -3.0,
+          "fiberContent": 0.0,
+          "proteinContent": -2.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -20.0,
+          "ironContent": 0.0,
+          "sugarContent": -1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Lettuce",
+        "reason": "Adds fiber and volume to the taco, helping you feel full and satisfied with fewer calories.",
+        "nutritionDifference": {
+          "servingSize": "1 Taco",
+          "calories": 10,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 10.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "Tomato",
+        "reason": "Adds vitamins and antioxidants to the taco, providing extra nutrition without extra calories.",
+        "nutritionDifference": {
+          "servingSize": "1 Taco",
+          "calories": 10,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 10.0,
+          "ironContent": 0.0,
+          "sugarContent": 1.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "More Veggies",
+      "No Cheese",
+      "No Sour Cream"
+    ]
   }
 ]

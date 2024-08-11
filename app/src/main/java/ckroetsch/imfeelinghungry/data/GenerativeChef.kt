@@ -38,7 +38,7 @@ sealed class Result<out T> {
     data object Loading : Result<Nothing>()
 }
 
-val UseGenAi = false
+val UseGenAi = true
 
 private const val TAG = "GenerativeChef"
 
@@ -103,7 +103,7 @@ class GenerativeChef(
             Generate a custom menu 'hack' item from one of the following restaurants: $restaurants that
             best matches the dietary preferences: $diet. Do not suggest other diets.
             Feel free to make modifications to the menu item as needed (add/remove/substitute) But make sure it is from
-            the menu. 
+            the menu.
         """.trimIndent()
 
         val content: Content = content {

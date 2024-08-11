@@ -82,7 +82,7 @@ fun MenuItemScreen(
     menuItem: MenuItem,
     goals: List<NutritionGoal>,
     navController: NavController,
-    onRegenerate: (String) -> Unit,
+    onRegenerate: ((String) -> Unit)? = null,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
@@ -191,7 +191,11 @@ fun MenuItemScreen(
                     items(menuItem.redoModifiers) { redoText ->
                         Button(
                             colors = ButtonDefaults.buttonColors(containerColor = DarkOrange),
-                            onClick = { onRegenerate(redoText) },
+                            onClick = {
+                                if (onRegenerate != null) {
+                                    onRegenerate(redoText)
+                                }
+                            },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                         ) {
@@ -216,7 +220,11 @@ fun MenuItemScreen(
                     items(AllRestaurants) { restaurant ->
                         Button(
                             colors = ButtonDefaults.buttonColors(containerColor = DarkOrange),
-                            onClick = { onRegenerate(restaurant.name) },
+                            onClick = {
+                                if (onRegenerate != null) {
+                                    onRegenerate(restaurant.name)
+                                }
+                            },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                         ) {

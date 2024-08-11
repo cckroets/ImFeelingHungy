@@ -8,6 +8,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,12 +43,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -62,6 +66,7 @@ import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import kotlinx.serialization.json.Json
 import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +74,7 @@ fun DiscoverScreen(
     modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel,
     navController: NavController,
-){
+) {
     val menuItems = LoadMenuItemsFromJson()
     //val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
@@ -94,10 +99,9 @@ fun DiscoverScreen(
                 },
 
 
-            )
+                )
         }
-    ) {
-        padding ->
+    ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
@@ -127,6 +131,8 @@ fun MenuItemCard(
     preferencesViewModel: PreferencesViewModel,
     navController: NavController,
 ) {
+    var isFavorite by remember { mutableStateOf(preferencesViewModel.isFavorite(menuItem)) }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -144,7 +150,8 @@ fun MenuItemCard(
         elevation = CardDefaults.cardElevation(8.dp),
         onClick = {
             val serializedMenuItem = serializeMenuItem(menuItem)
-            navController.navigate("viewDiscoverItem/$serializedMenuItem")        }
+            navController.navigate("viewDiscoverItem/$serializedMenuItem")
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -209,10 +216,20 @@ fun MenuItemCard(
                 }
             }
             Icon(
-                imageVector = Icons.Filled.FavoriteBorder,
+                imageVector = (if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder) as ImageVector,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = Color.Red
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        if (preferencesViewModel.isFavorite(menuItem)) {
+                            preferencesViewModel.removeFavorite(menuItem)
+                            isFavorite = false
+                        } else {
+                            preferencesViewModel.addFavorite(menuItem)
+                            isFavorite = true
+                        }
+                    },
+                tint = if (isFavorite) Color.Red else Color.Gray
             )
         }
     }
@@ -224,13 +241,17 @@ fun LoadMenuItemsFromJson(): List<MenuItem> {
     val context = LocalContext.current
     var menuItems by remember { mutableStateOf<List<MenuItem>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
-        menuItems = loadJsonFromAssets(context, "discover_items.json")
-            .shuffled() // Shuffle the list to randomize
-            .take(5) // Take only 5 items
+    val seed = rememberSaveable() {
+        System.currentTimeMillis()
     }
 
-    Log.e( "menuItems:", "$menuItems")
+    LaunchedEffect(Unit) {
+        menuItems = loadJsonFromAssets(context, "discover_items.json")
+            .shuffled(Random(seed)) // Shuffle the list to randomize
+            .take(10) // Take only 5 items
+    }
+
+    Log.e("menuItems:", "$menuItems")
     return menuItems
 }
 
@@ -249,7 +270,6 @@ private fun loadJsonFromAssets(context: Context, fileName: String): List<MenuIte
         emptyList()
     }
 }
-
 
 
 fun serializeMenuItem(menuItem: MenuItem): String {

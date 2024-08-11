@@ -71,7 +71,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
                     "viewDiscoverItem/{menuItemJson}",
                     arguments = listOf(navArgument("menuItemJson") { type = NavType.StringType })
                 ) { backStackEntry ->
-                    ViewDiscoverItemScreen(navController, backStackEntry)
+                    ViewDiscoverItemScreen(navController, backStackEntry, viewModel)
                 }
             }
         }

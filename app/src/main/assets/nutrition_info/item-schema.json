@@ -28,7 +28,7 @@
     },
     "originalNutrition": {
       "type": "object",
-      "description": "Nutritional information for the base menu item",
+      "description": "Nutritional information for the menu item. Make sure it is accurate",
       "$ref": "#/definitions/NutritionalInformation"
     },
     "appliedCustomizations": {

@@ -149,6 +149,14 @@ fun WelcomeScreen(
             )
         }
 
+        Spacer(modifier = Modifier.height(25.dp))
+        TextButton(
+            onClick = {
+                navController.navigate("discover")
+            }) {
+            Text(text = "Discover")
+            }
+
     }
 }
 

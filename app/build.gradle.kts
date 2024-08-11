@@ -56,9 +56,6 @@ android {
 
 dependencies {
     api(platform("dev.chrisbanes.compose:compose-bom:2024.07.00-alpha02"))
-    implementation ("androidx.compose.material:material-icons-core:<version>")
-    implementation (libs.androidx.material.icons.extended)
-
     implementation("io.github.klassenkonstantin:physics-layout:0.4.1")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

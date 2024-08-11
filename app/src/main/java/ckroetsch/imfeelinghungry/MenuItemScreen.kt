@@ -18,22 +18,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,13 +43,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -58,10 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.data.MenuCustomization
 import ckroetsch.imfeelinghungry.data.MenuItem
@@ -74,13 +68,11 @@ import ckroetsch.imfeelinghungry.data.calculateFinalNutrition
 import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
 import ckroetsch.imfeelinghungry.onboarding.Amount
 import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
-import ckroetsch.imfeelinghungry.onboarding.NutritionalGain
 import ckroetsch.imfeelinghungry.onboarding.toGains
 import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import ckroetsch.imfeelinghungry.ui.theme.Green30
 import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import ckroetsch.imfeelinghungry.ui.theme.Red30
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,34 +89,34 @@ fun MenuItemScreen(
 
     Scaffold(
         containerColor = Color.White,
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             //.background(
             //    brush = Brush.linearGradient(
             //        colors = listOf(Color.White, Color.White, Color(0xffffd32b))
             //    )
             //),
+        floatingActionButton = {
+            onRegenerate?.let { onClick ->
+                CustomFloatingActionButton(fabIcon = Sparkles) {
+                    RefinementBox(menuItem, onClick)
+                }
+            }
+        },
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = DarkOrange,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
                 ),
                 title = {
-                        Text(
-                            menuItem.restaurantName,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-
-
-                    },
+                    Text(
+                        menuItem.restaurantName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.Close,
                             contentDescription = "Back"
                         )
                     }
@@ -150,28 +142,50 @@ fun MenuItemScreen(
         }
     ) { padding ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().drawWithContent {
+                drawContent()
+                drawLine(
+                    color = Color.LightGray,
+                    start = Offset(0f, size.height - 1f),
+                    end = Offset(size.width, size.height - 1f),
+                    strokeWidth = 5f
+                )
+            },
             contentPadding = PaddingValues(
                 start = 0.dp,
                 end = 0.dp,
                 top = padding.calculateTopPadding() + 16.dp,
-                bottom = padding.calculateBottomPadding()
+                bottom = padding.calculateBottomPadding() + 64.dp
             )
         ) {
             val paddedModifier = Modifier.padding(horizontal = 12.dp)
             item {
-                Text(
-                    text = menuItem.creationTitle ?: menuItem.menuItemTitle,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = paddedModifier
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = menuItem.creationDescription, modifier = paddedModifier)
-                Spacer(modifier = Modifier.height(16.dp))
+                TitleAICard(
+                    modifier = paddedModifier.fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = menuItem.creationTitle ?: menuItem.menuItemTitle,
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = menuItem.creationDescription,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
 
             item {
+                Spacer(modifier = Modifier.height(16.dp))
                 MenuLabel(
                     text = "How to order",
                     modifier = paddedModifier
@@ -203,63 +217,65 @@ fun MenuItemScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 NutritionalLabel(menuItem.calculateFinalNutrition(), menuItem.originalNutrition)
             }
+        }
+    }
+}
 
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuLabel(
-                    text = "Refine this creation",
-                    modifier = paddedModifier
-                )
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .scrollable(rememberScrollState(), orientation = Orientation.Horizontal),
-                    contentPadding = PaddingValues(12.dp)
+@Composable
+fun RefinementBox(
+    menuItem: MenuItem,
+    onRegenerate: (String) -> Unit
+) {
+    val paddedModifier = Modifier.padding(horizontal = 12.dp)
+    Column(
+    ) {
+        Spacer(modifier = Modifier.height(12.dp))
+        MenuLabel(
+            text = "Refine this creation",
+            modifier = paddedModifier
+        )
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .scrollable(rememberScrollState(), orientation = Orientation.Horizontal),
+            horizontalArrangement = Arrangement.Center,
+            contentPadding = PaddingValues(12.dp)
+        ) {
+            items(menuItem.redoModifiers) { redoText ->
+                TextButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = MustardYellow,
+                        contentColor = Color.Black,
+                    ),
+                    onClick = { onRegenerate(redoText) },
+                    modifier = Modifier.padding(end = 8.dp)
                 ) {
-                    items(menuItem.redoModifiers) { redoText ->
-                        Button(
-                            colors = ButtonDefaults.buttonColors(containerColor = DarkOrange),
-                            onClick = {
-                                if (onRegenerate != null) {
-                                    onRegenerate(redoText)
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                        ) {
-                            Text(text = redoText)
-                        }
-                    }
+                    Text(text = redoText)
                 }
             }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuLabel(
-                    text = "More Options",
-                    modifier = paddedModifier
-                )
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .scrollable(rememberScrollState(), orientation = Orientation.Horizontal),
-                    contentPadding = PaddingValues(12.dp)
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        MenuLabel(
+            text = "Try other restaurants",
+            modifier = paddedModifier
+        )
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .scrollable(rememberScrollState(), orientation = Orientation.Horizontal),
+            horizontalArrangement = Arrangement.Center,
+            contentPadding = PaddingValues(12.dp)
+        ) {
+            items(AllRestaurants) { restaurant ->
+                TextButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = MustardYellow,
+                        contentColor = Color.Black,
+                    ),
+                    onClick = { onRegenerate(restaurant.name) },
+                    modifier = Modifier.padding(end = 8.dp)
                 ) {
-                    items(AllRestaurants) { restaurant ->
-                        Button(
-                            colors = ButtonDefaults.buttonColors(containerColor = DarkOrange),
-                            onClick = {
-                                if (onRegenerate != null) {
-                                    onRegenerate(restaurant.name)
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                        ) {
-                            Text(text = restaurant.name)
-                        }
-
-                    }
+                    Text(text = restaurant.name)
                 }
             }
         }
@@ -515,6 +531,35 @@ private fun MenuCard(
 
 @Composable
 fun GenerativeAICard(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .border(
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = Color.LightGray
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ),
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+fun TitleAICard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {

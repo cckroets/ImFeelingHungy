@@ -2,7 +2,6 @@ package ckroetsch.imfeelinghungry.onboarding
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -34,23 +31,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import ckroetsch.imfeelinghungry.SecondaryScreen
 import ckroetsch.imfeelinghungry.data.Preference
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
-import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun OnboardingScreen(
+fun PreferencesScreen(
     modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel,
     navController: NavController
@@ -61,36 +58,10 @@ fun OnboardingScreen(
     val selectedFoods = viewModel.preferences.dietaryPreferences.toMap()
     val isDietSelected = { diet: Diet -> selectedFoods[diet.name] == Preference.LIKED }
 
-    Scaffold(
-        containerColor = Color.White,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = DarkOrange,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                ),
-                title = {
-                    Text(
-                        "Preferences",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-            )
-        }
-    ) { padding ->
+    SecondaryScreen(modifier, "Preferences") { padding, scrollConnection ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
+            modifier = Modifier.nestedScroll(scrollConnection),
             contentPadding = PaddingValues(
                 top = padding.calculateTopPadding(),
                 bottom = padding.calculateBottomPadding(),

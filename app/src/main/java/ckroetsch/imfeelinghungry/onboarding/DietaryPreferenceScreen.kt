@@ -75,7 +75,7 @@ fun DietaryPreferenceScreen(
         OnboardingNavigator(
             navController = navController,
             nextPage = "generateOrder",
-            prevPage = "restaurant",
+            prevPage = "preferences",
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp) // Adjusted height for better visibility

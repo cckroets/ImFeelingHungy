@@ -6,7 +6,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,19 +23,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,8 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.IOException
 import androidx.navigation.NavController
-import ckroetsch.imfeelinghungry.MenuItemScreen
-import ckroetsch.imfeelinghungry.R
+import ckroetsch.imfeelinghungry.SecondaryScreen
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import kotlinx.serialization.json.Json
@@ -67,7 +59,6 @@ import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoverScreen(
     modifier: Modifier = Modifier,
@@ -75,34 +66,12 @@ fun DiscoverScreen(
     navController: NavController,
 ) {
     val menuItems = LoadMenuItemsFromJson()
-    //val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    Scaffold(
-        containerColor = Color.White,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = DarkOrange,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                ),
-                title = {
-                    Text(text = "Discover")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-
-
-                )
-        }
-    ) { padding ->
+    SecondaryScreen(
+        modifier = modifier,
+        title = "Discover",
+    ) { padding, scrollConnection ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollConnection),
             contentPadding = PaddingValues(
                 start = 0.dp,
                 end = 0.dp,
@@ -234,23 +203,18 @@ fun MenuItemCard(
     }
 }
 
+private val seed = System.currentTimeMillis()
 
 @Composable
 fun LoadMenuItemsFromJson(): List<MenuItem> {
     val context = LocalContext.current
     var menuItems by remember { mutableStateOf<List<MenuItem>>(emptyList()) }
 
-    val seed = rememberSaveable() {
-        System.currentTimeMillis()
-    }
-
     LaunchedEffect(Unit) {
         menuItems = loadJsonFromAssets(context, "discover_items.json")
             .shuffled(Random(seed)) // Shuffle the list to randomize
-            .take(10) // Take only 5 items
+            .take(5) // Take only 5 items
     }
-
-    Log.e("menuItems:", "$menuItems")
     return menuItems
 }
 

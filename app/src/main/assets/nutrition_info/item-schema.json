@@ -9,7 +9,7 @@
     },
     "creationTitle": {
       "type": "string",
-      "description": "Creative title for this unique menu item creation. DO NOT ADD ANY QUOTES!"
+      "description": "Creative title for this unique menu item creation. Use plain string, no quotes or emojis"
     },
     "creationDescription": {
       "type": "string",

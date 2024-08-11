@@ -10,14 +10,11 @@ import ckroetsch.imfeelinghungry.ui.theme.ImFeelingHungryTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val preferencesViewModel: PreferencesViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ImFeelingHungryTheme {
-                MainNavigation(preferencesViewModel)
-
+                MainNavigation()
             }
         }
     }

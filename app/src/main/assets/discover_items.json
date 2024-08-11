@@ -1,0 +1,472 @@
+[
+  {
+    "restaurantName": "Chipotle",
+    "creationTitle": "Protein-Packed Chicken Bowl",
+    "creationDescription": "This customized Chicken Bowl is a protein powerhouse, featuring a double portion of chicken for maximum muscle-building potential. This protein-rich bowl is packed with flavor and nutrition, making it a satisfying and healthy meal choice for those seeking a high-protein boost.",
+    "menuItemTitle": "Chicken Bowl",
+    "reasons": [
+      {
+        "title": "💪 Double Chicken, Double Protein",
+        "description": "Adding another serving of chicken significantly increases the protein content of the Chicken Bowl, making it a more satiating and protein-packed meal."
+      },
+      {
+        "title": "🍚 Flavorful & Nutritious",
+        "description": "This customized bowl maintains the delicious flavors of the original Chicken Bowl while boosting its protein content. You'll get a satisfying and nutritious meal that keeps you feeling full and energized."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 bowl",
+      "calories": 580,
+      "caloriesFromFat": 250,
+      "carbohydrateContent": 61.0,
+      "cholesterolContent": 80.0,
+      "fatContent": 28.0,
+      "fiberContent": 12.0,
+      "proteinContent": 35.0,
+      "saturatedFatContent": 10.0,
+      "sodiumContent": 1180.0,
+      "ironContent": 8.0,
+      "sugarContent": 5.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Add",
+        "ingredient": "🍗 Chicken",
+        "reason": "Increases the protein content of the Chicken Bowl, making it a more fulfilling meal.",
+        "nutritionDifference": {
+          "servingSize": "1",
+          "calories": 240,
+          "caloriesFromFat": 100,
+          "carbohydrateContent": 10.0,
+          "cholesterolContent": 40.0,
+          "fatContent": 11.0,
+          "fiberContent": 2.0,
+          "proteinContent": 20.0,
+          "saturatedFatContent": 4.0,
+          "sodiumContent": 450.0,
+          "ironContent": 3.0,
+          "sugarContent": 2.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "More Protein",
+      "Double Chicken",
+      "Add More Meat"
+    ]
+  },
+  {
+    "restaurantName": "Subway",
+    "creationTitle": "Lean & Green Subway Sub",
+    "creationDescription": "This Subway sub is packed with protein and fiber, while keeping calories in check. Choose a lean protein, load up on veggies, and enjoy a satisfying and healthy meal.",
+    "menuItemTitle": "Subway 6-inch Sub",
+    "reasons": [
+      {
+        "title": "💪 High Protein & Fiber",
+        "description": "The lean protein and abundance of veggies provide a satisfying amount of protein and fiber, keeping you full and energized."
+      },
+      {
+        "title": "📉 Low Calorie Choice",
+        "description": "This customization helps reduce overall calories, making it a great option for those watching their weight."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 6-inch sub",
+      "calories": 300,
+      "caloriesFromFat": 100,
+      "carbohydrateContent": 40.0,
+      "cholesterolContent": 30.0,
+      "fatContent": 10.0,
+      "fiberContent": 5.0,
+      "proteinContent": 15.0,
+      "saturatedFatContent": 4.0,
+      "sodiumContent": 500.0,
+      "ironContent": 4.0,
+      "sugarContent": 5.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Choose",
+        "ingredient": "🍗 Lean Protein (Chicken Breast or Tuna)",
+        "reason": "Lean protein options provide a satisfying protein source with fewer calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": -50,
+          "caloriesFromFat": -20,
+          "carbohydrateContent": -5.0,
+          "cholesterolContent": -10.0,
+          "fatContent": -2.0,
+          "fiberContent": 0.0,
+          "proteinContent": 5.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -50.0,
+          "ironContent": 1.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "🫑 Veggies (Spinach, Lettuce, Cucumber, Tomatoes, Green Peppers)",
+        "reason": "Veggies add fiber, vitamins, and nutrients without adding significant calories.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": 10,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 2.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 10.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Remove",
+        "ingredient": "🧀 Cheese",
+        "reason": "Removing cheese reduces calories and saturated fat.",
+        "nutritionDifference": {
+          "servingSize": "1 6-inch sub",
+          "calories": -100,
+          "caloriesFromFat": -40,
+          "carbohydrateContent": -5.0,
+          "cholesterolContent": -15.0,
+          "fatContent": -5.0,
+          "fiberContent": 0.0,
+          "proteinContent": -2.0,
+          "saturatedFatContent": -2.0,
+          "sodiumContent": -100.0,
+          "ironContent": -1.0,
+          "sugarContent": -2.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "Less Calories",
+      "More Protein",
+      "More Fiber"
+    ]
+  },
+  {
+    "restaurantName": "Chick-fil-A",
+    "creationTitle": "Chick-fil-A Lean & Green",
+    "creationDescription": "This customized Chick-fil-A sandwich is packed with protein and fiber, while keeping calories in check. Enjoy a grilled chicken breast with a bed of fresh veggies and a side of a fruit cup, offering a satisfying and healthy meal.",
+    "menuItemTitle": "Grilled Chicken Sandwich",
+    "reasons": [
+      {
+        "title": "💪 High Protein & Fiber",
+        "description": "The grilled chicken breast provides a lean protein source, while the fresh veggies add fiber, vitamins, and nutrients."
+      },
+      {
+        "title": "📉 Low Calorie Choice",
+        "description": "This customization helps reduce overall calories compared to the standard Grilled Chicken Sandwich."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 sandwich",
+      "calories": 320,
+      "caloriesFromFat": 100,
+      "carbohydrateContent": 38.0,
+      "cholesterolContent": 65.0,
+      "fatContent": 11.0,
+      "fiberContent": 3.0,
+      "proteinContent": 32.0,
+      "saturatedFatContent": 3.0,
+      "sodiumContent": 630.0,
+      "ironContent": 8.0,
+      "sugarContent": 5.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Remove",
+        "ingredient": "🍞 Bun",
+        "reason": "Removing the bun reduces calories and carbohydrates while maintaining the delicious grilled chicken.",
+        "nutritionDifference": {
+          "servingSize": "1 sandwich",
+          "calories": -150,
+          "caloriesFromFat": -20,
+          "carbohydrateContent": -25.0,
+          "cholesterolContent": 0.0,
+          "fatContent": -2.0,
+          "fiberContent": -2.0,
+          "proteinContent": -1.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -50.0,
+          "ironContent": -1.0,
+          "sugarContent": -2.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "🥗  Veggies (Lettuce, Tomato, Cucumber, Pickles)",
+        "reason": "Adding fresh veggies adds fiber and nutrients without adding significant calories.",
+        "nutritionDifference": {
+          "servingSize": "1 sandwich",
+          "calories": 10,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 2.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 2.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 10.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "🍎 Side of Fruit Cup",
+        "reason": "A side of fruit provides additional fiber and vitamins for a well-rounded meal.",
+        "nutritionDifference": {
+          "servingSize": "1 cup",
+          "calories": 100,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 25.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 4.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 1.0,
+          "sugarContent": 20.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "Less Calories",
+      "More Protein",
+      "More Fiber"
+    ]
+  },
+  {
+    "restaurantName": "Wendy's",
+    "creationTitle": "Wendy's Vegan Spicy Chicken",
+    "creationDescription": "This plant-based twist on Wendy's Spicy Chicken Sandwich swaps the chicken for a flavorful black bean patty, giving you a satisfying and vegan-friendly option. Enjoy a crispy black bean patty with lettuce, tomato, and a spicy mayo sauce on a toasted bun.",
+    "menuItemTitle": "Spicy Chicken Sandwich",
+    "reasons": [
+      {
+        "title": "🌱 Vegan Goodness",
+        "description": "This creation replaces the chicken with a plant-based black bean patty, making it a completely vegan option."
+      },
+      {
+        "title": "🌶️ Spicy Kick",
+        "description": "The black bean patty offers a satisfying and savory flavor with a spicy kick, similar to the original Spicy Chicken Sandwich."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 sandwich",
+      "calories": 540,
+      "caloriesFromFat": 270,
+      "carbohydrateContent": 45.0,
+      "cholesterolContent": 60.0,
+      "fatContent": 30.0,
+      "fiberContent": 4.0,
+      "proteinContent": 25.0,
+      "saturatedFatContent": 10.0,
+      "sodiumContent": 1000.0,
+      "ironContent": 6.0,
+      "sugarContent": 7.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Substitute",
+        "ingredient": "🌱 Black Bean Patty",
+        "reason": "This substitution replaces the chicken patty with a plant-based alternative, creating a vegan-friendly option.",
+        "substituted": "🍗 Chicken Patty",
+        "nutritionDifference": {
+          "servingSize": "1 sandwich",
+          "calories": -100,
+          "caloriesFromFat": -50,
+          "carbohydrateContent": -5.0,
+          "cholesterolContent": -30.0,
+          "fatContent": -5.0,
+          "fiberContent": 2.0,
+          "proteinContent": -5.0,
+          "saturatedFatContent": -2.0,
+          "sodiumContent": -100.0,
+          "ironContent": -1.0,
+          "sugarContent": -1.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Remove",
+        "ingredient": "🧀 Cheese",
+        "reason": "Removing the cheese makes the sandwich dairy-free and suitable for vegan diets.",
+        "nutritionDifference": {
+          "servingSize": "1 sandwich",
+          "calories": -50,
+          "caloriesFromFat": -20,
+          "carbohydrateContent": -2.0,
+          "cholesterolContent": -10.0,
+          "fatContent": -2.0,
+          "fiberContent": 0.0,
+          "proteinContent": -2.0,
+          "saturatedFatContent": -1.0,
+          "sodiumContent": -50.0,
+          "ironContent": -1.0,
+          "sugarContent": -1.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "Dairy Free",
+      "Vegan"
+    ]
+  },
+  {
+    "restaurantName": "Starbucks",
+    "creationTitle": "Low-Sugar Caramel Macchiato",
+    "creationDescription": "Enjoy a delicious and less sweet version of the classic Caramel Macchiato. Ask for your drink to be made with sugar-free syrup instead of regular syrup, keeping the delicious caramel flavor but significantly reducing the sugar content.",
+    "menuItemTitle": "Grande Caramel Macchiato",
+    "reasons": [
+      {
+        "title": "📉 Lower Sugar",
+        "description": "This customization cuts down on added sugars, making it a healthier choice for those watching their sugar intake."
+      },
+      {
+        "title": "☕ Classic Flavor",
+        "description": "Enjoy the same delicious caramel flavor of a Caramel Macchiato with significantly less sugar."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 grande",
+      "calories": 240,
+      "caloriesFromFat": 70,
+      "carbohydrateContent": 37.0,
+      "cholesterolContent": 10.0,
+      "fatContent": 8.0,
+      "fiberContent": 1.0,
+      "proteinContent": 5.0,
+      "saturatedFatContent": 5.0,
+      "sodiumContent": 110.0,
+      "ironContent": 0.0,
+      "sugarContent": 36.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Substitute",
+        "ingredient": "🫙 Sugar-free Syrup",
+        "reason": "This substitution replaces the regular syrup with sugar-free syrup, significantly reducing the sugar content without affecting the flavor.",
+        "substituted": "🍯 Regular Syrup",
+        "nutritionDifference": {
+          "servingSize": "1 grande",
+          "calories": -20,
+          "caloriesFromFat": -5,
+          "carbohydrateContent": -20.0,
+          "cholesterolContent": 0.0,
+          "fatContent": -1.0,
+          "fiberContent": 0.0,
+          "proteinContent": 0.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": -5.0,
+          "ironContent": 0.0,
+          "sugarContent": -25.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "Less Sugar"
+    ]
+  },
+  {
+    "restaurantName": "Five Guys",
+    "creationTitle": "Keto-Friendly Five Guys Burger",
+    "creationDescription": "This is a modified Five Guys Little Bacon Cheeseburger, customized to be Keto-friendly. We remove the bun and replace it with a lettuce wrap,  giving you a satisfying burger experience while staying true to your Keto diet.",
+    "menuItemTitle": "Little Bacon Cheeseburger",
+    "reasons": [
+      {
+        "title": "🍔 Keto-Friendly Burger",
+        "description": "This burger is a delicious and satisfying way to enjoy your favorite fast food while staying on track with your Keto diet. By replacing the bun with a lettuce wrap, we eliminate the carbs and keep you in ketosis."
+      },
+      {
+        "title": "🥓 Bacon Goodness",
+        "description": "Enjoy the crispy bacon with all the toppings you love, creating a flavorful and filling meal. Remember, the key is to keep the carbs low, and this modification makes it possible to indulge in your favorite Five Guys flavors without sacrificing your goals."
+      }
+    ],
+    "originalNutrition": {
+      "servingSize": "1 burger",
+      "calories": 650,
+      "caloriesFromFat": 380,
+      "carbohydrateContent": 45.0,
+      "cholesterolContent": 60.0,
+      "fatContent": 35.0,
+      "fiberContent": 3.0,
+      "proteinContent": 25.0,
+      "saturatedFatContent": 15.0,
+      "sodiumContent": 1000.0,
+      "ironContent": 10.0,
+      "sugarContent": 5.0,
+      "transFatContent": 0.0
+    },
+    "appliedCustomizations": [
+      {
+        "type": "Remove",
+        "ingredient": "🍔 Bun",
+        "reason": "This removes the carbs from the bun, making this burger Keto-friendly.",
+        "nutritionDifference": {
+          "servingSize": "1 burger",
+          "calories": -200,
+          "caloriesFromFat": -10,
+          "carbohydrateContent": -40.0,
+          "cholesterolContent": 0.0,
+          "fatContent": -5.0,
+          "fiberContent": -2.0,
+          "proteinContent": -2.0,
+          "saturatedFatContent": -2.0,
+          "sodiumContent": -50.0,
+          "ironContent": -1.0,
+          "sugarContent": -3.0,
+          "transFatContent": 0.0
+        }
+      },
+      {
+        "type": "Add",
+        "ingredient": "🥬 Lettuce Wrap",
+        "reason": "This is a low-carb replacement for the bun, creating a delicious and satisfying burger experience.",
+        "nutritionDifference": {
+          "servingSize": "1 burger",
+          "calories": 5,
+          "caloriesFromFat": 0,
+          "carbohydrateContent": 1.0,
+          "cholesterolContent": 0.0,
+          "fatContent": 0.0,
+          "fiberContent": 1.0,
+          "proteinContent": 1.0,
+          "saturatedFatContent": 0.0,
+          "sodiumContent": 5.0,
+          "ironContent": 0.0,
+          "sugarContent": 0.0,
+          "transFatContent": 0.0
+        }
+      }
+    ],
+    "redoModifiers": [
+      "More Bacon",
+      "Extra Cheese",
+      "More Lettuce",
+      "Add Grilled Mushrooms",
+      "Add Onions",
+      "Add Pickles"
+    ]
+  }
+]

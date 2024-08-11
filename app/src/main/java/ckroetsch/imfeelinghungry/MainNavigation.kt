@@ -1,5 +1,6 @@
 package ckroetsch.imfeelinghungry
 
+import ViewDiscoverItemScreen
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -18,11 +19,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Result
+import ckroetsch.imfeelinghungry.discover.DiscoverScreen
 import ckroetsch.imfeelinghungry.onboarding.DietaryPreferenceScreen
 import ckroetsch.imfeelinghungry.onboarding.FoodScreen
 import ckroetsch.imfeelinghungry.onboarding.OnboardingScreen
@@ -60,7 +64,15 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
                         sharedElementScope = sharedElementScope,
                         animatedVisibilityScope = this
                 ) }
+
+                composable("discover") {DiscoverScreen(viewModel = viewModel, navController = navController) }
                 // Add other destinations here
+                composable(
+                    "viewDiscoverItem/{menuItemJson}",
+                    arguments = listOf(navArgument("menuItemJson") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    ViewDiscoverItemScreen(navController, backStackEntry)
+                }
             }
         }
     }

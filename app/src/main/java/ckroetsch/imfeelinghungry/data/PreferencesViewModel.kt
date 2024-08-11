@@ -3,6 +3,7 @@ package ckroetsch.imfeelinghungry.data
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import ckroetsch.imfeelinghungry.R
 import ckroetsch.imfeelinghungry.dataStore
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
 import ckroetsch.imfeelinghungry.onboarding.Diet
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
+import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
 
 
 enum class Preference {
@@ -37,6 +39,7 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     init {
         preferences.observeChanges()
     }
+
 
     fun setDietaryPreference(diet: Diet, preference: Preference) {
         preferences.setDietaryPreference(diet, preference)
@@ -73,5 +76,15 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
 
     suspend fun isDataStoreEmpty(): Boolean {
         return isDataStoreEmpty(dataStore)
+    }
+
+    fun lookupRestuarantImage(restaurantName: String): Int {
+        AllRestaurants.forEach {
+            if (it.name == restaurantName) {
+                return it.imageUrl
+            }
+        }
+        // Return a default image resource ID if the restaurant is not found
+        return R.drawable._004_fish // Replace with your default image resource
     }
 }

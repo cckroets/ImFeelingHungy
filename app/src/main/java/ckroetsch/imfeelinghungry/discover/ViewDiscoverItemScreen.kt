@@ -4,12 +4,9 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.MenuItemScreen
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
-import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
-import org.checkerframework.checker.units.qual.m
 
 @Composable
 fun ViewDiscoverItemScreen(
@@ -28,7 +25,8 @@ fun ViewDiscoverItemScreen(
         MenuItemScreen(
             menuItem = it,
             goals = goals,
-            navController = navController
+            navController = navController,
+            viewModel = viewModel
         )
     } ?: run {
         // If menuItem is null, show an error message

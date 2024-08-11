@@ -157,6 +157,14 @@ fun WelcomeScreen(
             Text(text = "Discover")
             }
 
+        TextButton(
+            onClick = {
+                navController.navigate("favorites")
+            }) {
+            Text(text = "Favorites")
+
+        }
+
     }
 }
 

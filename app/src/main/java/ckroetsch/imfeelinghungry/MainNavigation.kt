@@ -27,6 +27,7 @@ import androidx.navigation.navArgument
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Result
 import ckroetsch.imfeelinghungry.discover.DiscoverScreen
+import ckroetsch.imfeelinghungry.favorite.FavoriteScreen
 import ckroetsch.imfeelinghungry.onboarding.DietaryPreferenceScreen
 import ckroetsch.imfeelinghungry.onboarding.FoodScreen
 import ckroetsch.imfeelinghungry.onboarding.OnboardingScreen
@@ -64,7 +65,7 @@ fun MainNavigation(preferencesViewModel: PreferencesViewModel) {
                         sharedElementScope = sharedElementScope,
                         animatedVisibilityScope = this
                 ) }
-
+                composable("favorites") { FavoriteScreen(viewModel = viewModel, navController = navController) }
                 composable("discover") {DiscoverScreen(viewModel = viewModel, navController = navController) }
                 // Add other destinations here
                 composable(
@@ -106,7 +107,8 @@ fun GeneratedOrderScreen(
                 MenuItemScreen(
                     m.data,
                     goals,
-                    navController
+                    navController,
+                    viewModel
                 ) { viewModel.regenerateWithInstructions(it) }
             }
         }

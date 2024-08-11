@@ -16,6 +16,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +37,10 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -63,6 +68,7 @@ import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.data.ModificationType
 import ckroetsch.imfeelinghungry.data.NutritionUnit
 import ckroetsch.imfeelinghungry.data.NutritionalInformation
+import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Reason
 import ckroetsch.imfeelinghungry.data.calculateFinalNutrition
 import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
@@ -82,9 +88,13 @@ fun MenuItemScreen(
     menuItem: MenuItem,
     goals: List<NutritionGoal>,
     navController: NavController,
+    viewModel: PreferencesViewModel,
     onRegenerate: ((String) -> Unit)? = null,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    var isFavorite by remember { mutableStateOf(false) }
+
+
     Scaffold(
         containerColor = Color.White,
         modifier = Modifier
@@ -108,12 +118,30 @@ fun MenuItemScreen(
                             overflow = TextOverflow.Ellipsis
                         )
 
+
+
                     },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        isFavorite = !isFavorite // Toggle the favorite state
+                        if (isFavorite) {
+                            viewModel.addFavorite(menuItem)
+                        } else {
+                            viewModel.removeFavorite(menuItem)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                            tint = if (isFavorite) Color.Red else Color.White
                         )
                     }
                 },

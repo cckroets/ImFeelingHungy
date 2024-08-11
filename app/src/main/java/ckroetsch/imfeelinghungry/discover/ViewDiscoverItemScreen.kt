@@ -4,7 +4,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.MenuItemScreen
-import kotlinx.serialization.json.Json
+import ckroetsch.imfeelinghungry.data.HungryJson
 import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 
@@ -17,7 +17,7 @@ fun ViewDiscoverItemScreen(
     val menuItemJson = navBackStackEntry.arguments?.getString("menuItemJson")
 
     val menuItem = remember(menuItemJson) {
-        menuItemJson?.let { Json.decodeFromString<MenuItem>(it) }
+        menuItemJson?.let { HungryJson.decodeFromString<MenuItem>(it) }
     }
     val goals = remember(viewModel) { viewModel.dietGoals }
 

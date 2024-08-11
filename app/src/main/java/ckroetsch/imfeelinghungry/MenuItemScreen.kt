@@ -1,5 +1,7 @@
 package ckroetsch.imfeelinghungry
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,19 +15,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,11 +46,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,13 +67,11 @@ import ckroetsch.imfeelinghungry.data.NutritionalInformation
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Reason
 import ckroetsch.imfeelinghungry.data.calculateFinalNutrition
-import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
-import ckroetsch.imfeelinghungry.onboarding.Amount
-import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
-import ckroetsch.imfeelinghungry.onboarding.toGains
-import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
+import ckroetsch.imfeelinghungry.data.AllRestaurants
+import ckroetsch.imfeelinghungry.data.Amount
+import ckroetsch.imfeelinghungry.data.NutritionGoal
+import ckroetsch.imfeelinghungry.data.toGains
 import ckroetsch.imfeelinghungry.ui.theme.Green30
-import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
 import ckroetsch.imfeelinghungry.ui.theme.Red30
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,31 +81,26 @@ fun MenuItemScreen(
     goals: List<NutritionGoal>,
     navController: NavController,
     viewModel: PreferencesViewModel,
+    isRefining : Boolean = false,
     onRegenerate: ((String) -> Unit)? = null,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     var isFavorite by remember { mutableStateOf(false) }
 
-
     Scaffold(
-        containerColor = Color.White,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            //.background(
-            //    brush = Brush.linearGradient(
-            //        colors = listOf(Color.White, Color.White, Color(0xffffd32b))
-            //    )
-            //),
         floatingActionButton = {
             onRegenerate?.let { onClick ->
-                CustomFloatingActionButton(fabIcon = Sparkles) {
-                    RefinementBox(menuItem, onClick)
+                CustomFloatingActionButton(
+                    forceCollapse = isRefining,
+                    fabIcon = Sparkles
+                ) {
+                    RefinementBox(menuItem, isRefining, onClick)
                 }
             }
         },
         topBar = {
             CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                ),
                 title = {
                     Text(
                         menuItem.restaurantName,
@@ -133,7 +128,6 @@ fun MenuItemScreen(
                         Icon(
                             imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                            tint = if (isFavorite) Color.Red else Color.White
                         )
                     }
                 },
@@ -141,81 +135,96 @@ fun MenuItemScreen(
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().drawWithContent {
-                drawContent()
-                drawLine(
-                    color = Color.LightGray,
-                    start = Offset(0f, size.height - 1f),
-                    end = Offset(size.width, size.height - 1f),
-                    strokeWidth = 5f
-                )
-            },
-            contentPadding = PaddingValues(
-                start = 0.dp,
-                end = 0.dp,
-                top = padding.calculateTopPadding() + 16.dp,
-                bottom = padding.calculateBottomPadding() + 64.dp
-            )
+        Box(
+            modifier = Modifier.padding(top = padding.calculateTopPadding()),
         ) {
-            val paddedModifier = Modifier.padding(horizontal = 12.dp)
-            item {
-                TitleAICard(
-                    modifier = paddedModifier.fillMaxWidth(),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 0.dp,
+                    end = 0.dp,
+                    top = 16.dp,
+                    bottom = padding.calculateBottomPadding() + 50.dp
+                )
+            ) {
+                val paddedModifier = Modifier.padding(horizontal = 12.dp)
+                item {
+                    TitleAICard(
+                        modifier = paddedModifier.fillMaxWidth(),
                     ) {
-                        Text(
-                            text = menuItem.creationTitle ?: menuItem.menuItemTitle,
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Column(
+                            modifier = Modifier.padding(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = menuItem.creationTitle ?: menuItem.menuItemTitle,
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = menuItem.creationDescription,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    MenuLabel(
+                        text = "How to order",
+                        modifier = paddedModifier
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MenuCreation(menuItem, goals)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    MenuLabel(
+                        text = "Highlights",
+                        modifier = paddedModifier
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                itemsIndexed(menuItem.reasons) { index, reason ->
+                    ReasonItem(reason)
+                    if (index < menuItem.reasons.size - 1) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = menuItem.creationDescription,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MenuLabel(
+                        text = "Nutrition",
+                        modifier = paddedModifier
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    NutritionalLabel(menuItem.calculateFinalNutrition(), menuItem.originalNutrition)
+                }
+            }
+
+            Crossfade(
+                modifier = Modifier.align(Alignment.TopCenter),
+                targetState = isRefining,
+                animationSpec = tween(durationMillis = 100)
+            ) { refreshing ->
+                if (refreshing) {
+                    Box(Modifier
+                        .shadow(8.dp, CircleShape)
+                        .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
+                        .padding(8.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp,
+                            modifier = Modifier.size(40.dp),
                         )
                     }
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                MenuLabel(
-                    text = "How to order",
-                    modifier = paddedModifier
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuCreation(menuItem, goals)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                MenuLabel(
-                    text = "Highlights",
-                    modifier = paddedModifier
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            itemsIndexed(menuItem.reasons) { index, reason ->
-                ReasonItem(reason)
-                if (index < menuItem.reasons.size - 1) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuLabel(
-                    text = "Nutrition",
-                    modifier = paddedModifier
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                NutritionalLabel(menuItem.calculateFinalNutrition(), menuItem.originalNutrition)
             }
         }
     }
@@ -224,6 +233,7 @@ fun MenuItemScreen(
 @Composable
 fun RefinementBox(
     menuItem: MenuItem,
+    isRefining: Boolean,
     onRegenerate: (String) -> Unit
 ) {
     val paddedModifier = Modifier.padding(horizontal = 12.dp)
@@ -232,6 +242,7 @@ fun RefinementBox(
         Spacer(modifier = Modifier.height(12.dp))
         MenuLabel(
             text = "Refine this creation",
+            style = MaterialTheme.typography.labelLarge,
             modifier = paddedModifier
         )
         LazyRow(
@@ -242,10 +253,10 @@ fun RefinementBox(
             contentPadding = PaddingValues(12.dp)
         ) {
             items(menuItem.redoModifiers) { redoText ->
-                TextButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = MustardYellow,
-                        contentColor = Color.Black,
+                FilledTonalButton(
+                    enabled = !isRefining,
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                     onClick = { onRegenerate(redoText) },
                     modifier = Modifier.padding(end = 8.dp)
@@ -256,7 +267,8 @@ fun RefinementBox(
         }
         Spacer(modifier = Modifier.height(8.dp))
         MenuLabel(
-            text = "Try other restaurants",
+            text = "Try another restaurant",
+            style = MaterialTheme.typography.labelLarge,
             modifier = paddedModifier
         )
         LazyRow(
@@ -267,12 +279,12 @@ fun RefinementBox(
             contentPadding = PaddingValues(12.dp)
         ) {
             items(AllRestaurants) { restaurant ->
-                TextButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = MustardYellow,
-                        contentColor = Color.Black,
+                FilledTonalButton(
+                    enabled = !isRefining,
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary,
                     ),
-                    onClick = { onRegenerate(restaurant.name) },
+                    onClick = { onRegenerate("From: ${restaurant.name}") },
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
                     Text(text = restaurant.name)
@@ -287,7 +299,7 @@ fun ReasonItem(reason: Reason) {
     MenuCard {
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = reason.title, fontWeight = FontWeight.Bold)
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = reason.description,
                 style = MaterialTheme.typography.bodyMedium
@@ -323,10 +335,11 @@ enum class GainType {
 }
 
 @Composable
-private fun NutritionalBenefits(
+fun NutritionalBenefits(
     nutrition: NutritionalInformation,
     goals: List<NutritionGoal>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showAsDifference: Boolean = true,
 ) {
     val relevantMetrics = remember(nutrition, goals) {
         nutrition
@@ -348,7 +361,8 @@ private fun NutritionalBenefits(
             value = gain.value,
             gainType = gainType,
             unit = gain.metric.unit,
-            modifier = modifier
+            modifier = modifier,
+            showAsDifference = showAsDifference
         )
     }
 }
@@ -359,7 +373,8 @@ fun NutritionalGain(
     value: Number,
     gainType: GainType,
     unit: NutritionUnit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showAsDifference: Boolean = true
 ) {
     val color = when (gainType) {
         GainType.GOOD -> Green30
@@ -368,7 +383,7 @@ fun NutritionalGain(
     Text(
         text = buildAnnotatedString {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                if (value.toInt() > 0) append("+")
+                if (showAsDifference && value.toInt() > 0) append("+")
                 append("${value.toInt()}${unit.suffix}")
             }
             append(" ")
@@ -379,8 +394,8 @@ fun NutritionalGain(
         color = color,
         style = MaterialTheme.typography.labelSmall,
         modifier = modifier
-            .padding(horizontal = 2.dp)
-            .background(Color(0x6FCCCCCC), MaterialTheme.shapes.small)
+            .padding(horizontal = 2.dp, vertical = 2.dp)
+            .background(MaterialTheme.colorScheme.onSecondary, MaterialTheme.shapes.small)
             .padding(horizontal = 4.dp, vertical = 2.dp)
     )
 }
@@ -436,7 +451,7 @@ fun MenuCreation(item: MenuItem, goals: List<NutritionGoal>) {
                 text = text,
                 style = MaterialTheme.typography.bodyLarge
             )
-            HorizontalDivider()
+            Spacer(Modifier.height(8.dp))
             item.appliedCustomizations.forEachIndexed { index, customization ->
                 CustomizationItem(customization, goals)
                 Spacer(modifier = Modifier.height(1.dp))
@@ -514,14 +529,6 @@ private fun MenuCard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val gradientBrush = Brush.linearGradient(
-        colors = listOf(
-            Color(0xFF00FFAB), // Bright green
-            Color(0xFF6200EA), // Purple
-            Color(0xFFFFC107), // Amber
-            Color(0xFFFF4081)  // Pink
-        )
-    )
     GenerativeAICard(
         modifier.fillMaxWidth().padding(horizontal = 16.dp),
     ) {
@@ -536,17 +543,8 @@ fun GenerativeAICard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .border(
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = Color.LightGray
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = modifier.padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
     ) {
         Box(
             modifier = Modifier
@@ -563,21 +561,19 @@ fun TitleAICard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Card(
+    ElevatedCard(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .padding(vertical = 8.dp)
             .border(
                 border = BorderStroke(
-                    width = 3.dp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(MustardYellow, DarkOrange, MustardYellow)
-                    )
+                    width = 4.dp,
+                    brush = AnimatedBrushBorder()
                 ),
                 shape = RoundedCornerShape(8.dp)
             ),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(
             modifier = Modifier
@@ -590,10 +586,14 @@ fun TitleAICard(
 }
 
 @Composable
-private fun MenuLabel(text: String, modifier: Modifier = Modifier) {
+private fun MenuLabel(
+    text: String,
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.labelMedium
+) {
     Text(
         text = text,
-        style = MaterialTheme.typography.labelMedium,
+        style = style,
         textAlign = TextAlign.Center,
         modifier = modifier.fillMaxWidth()
     )

@@ -8,31 +8,22 @@ import androidx.lifecycle.viewModelScope
 import ckroetsch.imfeelinghungry.R
 import ckroetsch.imfeelinghungry.dataStore
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
-import ckroetsch.imfeelinghungry.onboarding.Diet
-import ckroetsch.imfeelinghungry.onboarding.DietType
-import ckroetsch.imfeelinghungry.onboarding.Food
-import ckroetsch.imfeelinghungry.onboarding.NutritionGoal
-import ckroetsch.imfeelinghungry.onboarding.Restaurant
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import ckroetsch.imfeelinghungry.onboarding.AllRestaurants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-
 
 enum class Preference {
     LIKED,
     DISLIKED,
     DEFAULT
 }
-
 
 class PreferencesViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -42,7 +33,7 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     private val _favorites = MutableStateFlow<List<MenuItem>>(emptyList())
     val favorites: StateFlow<List<MenuItem>> get() = _favorites
 
-    private val item: MutableStateFlow<Result<MenuItem>> = MutableStateFlow(Result.Loading)
+    private val item: MutableStateFlow<Result<MenuItem>> = MutableStateFlow(Result.None)
 
     val generatedMenuItem: StateFlow<Result<MenuItem>> get() = item
 
@@ -70,6 +61,7 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun generateMenuItem() {
+        this.item.value = Result.Loading
         chef.generateFromChat().onEach { item ->
             this.item.value = item
         }.launchIn(viewModelScope)
@@ -126,13 +118,13 @@ class PreferencesViewModel(application: Application) : AndroidViewModel(applicat
                 preferences[FAVORITES_KEY] ?: "[]"
             }.first()
 
-            _favorites.value = Json.decodeFromString(favoritesJson)
+            _favorites.value = HungryJson.decodeFromString(favoritesJson)
         }
     }
 
     private fun saveFavorites() {
         viewModelScope.launch {
-            val favoritesJson = Json.encodeToString(_favorites.value)
+            val favoritesJson = HungryJson.encodeToString(_favorites.value)
             dataStore.edit { preferences ->
                 preferences[FAVORITES_KEY] = favoritesJson
             }

@@ -1,8 +1,8 @@
 package ckroetsch.imfeelinghungry.onboarding
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,39 +18,38 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.SecondaryScreen
+import ckroetsch.imfeelinghungry.data.AllPreferences
+import ckroetsch.imfeelinghungry.data.AllRestaurants
+import ckroetsch.imfeelinghungry.data.Diet
 import ckroetsch.imfeelinghungry.data.Preference
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
-import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
+import ckroetsch.imfeelinghungry.data.Restaurant
+import ckroetsch.imfeelinghungry.ui.theme.DarkPurple
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PreferencesScreen(
     modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel,
-    navController: NavController
 ) {
     val selectedRestaurants = viewModel.preferences.restaurantPreferences.toMap()
     val isRestaurantSelected = { restaurant: Restaurant -> selectedRestaurants[restaurant.name] == Preference.LIKED }
@@ -117,19 +116,6 @@ fun RestaurantSelection(
     restaurants: List<Restaurant> = AllRestaurants,
     isSelected: (Restaurant) -> Boolean
 ) {
-    //LazyColumn(
-    //    contentPadding = PaddingValues(16.dp),
-    //    verticalArrangement = Arrangement.spacedBy(4.dp),
-    //    modifier = modifier.fillMaxWidth()
-    //) {
-    //    items(restaurants) { restaurant ->
-    //        RestaurantCard(
-    //            restaurant = restaurant,
-    //            isSelected = isSelected(restaurant),
-    //            select = { onSelect(restaurant) }
-    //        )
-    //    }
-    //}
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(40.dp),
@@ -142,63 +128,15 @@ fun RestaurantSelection(
 }
 
 @Composable
-fun RestaurantCard2(
-    restaurant: Restaurant,
-    isSelected: Boolean,
-    select: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedCard(
-        colors = CardDefaults.outlinedCardColors(containerColor = Color.White),
-        border = CardDefaults.outlinedCardBorder(isSelected),
-        onClick = { select(!isSelected) }
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .padding(start = 8.dp, end = 16.dp)
-        ) {
-            Image(
-                painter = painterResource(restaurant.imageUrl),
-                modifier = Modifier.size(48.dp),
-                contentDescription = restaurant.name,
-            )
-            Text(
-                text = restaurant.name,
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.padding(16.dp).weight(1f)
-            )
-            Crossfade(isSelected, label = "selected${restaurant.name}") {
-                if (it) {
-                    Icon(
-                        imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = "Selection Icon",
-                        tint = DarkOrange,
-                        modifier = Modifier.size(24.dp).border(2.dp, DarkOrange, CircleShape)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier.size(24.dp).border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun RestaurantCard(
     restaurant: Restaurant,
     isSelected: Boolean,
     select: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    OutlinedCard(
+    Card(
         modifier = modifier.padding(8.dp),
-        colors = CardDefaults.outlinedCardColors(containerColor = Color.White),
-        border = CardDefaults.outlinedCardBorder(isSelected),
+        colors = CardDefaults.cardColors(if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLow),
         onClick = { select(!isSelected) }
     ) {
         Box(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -206,10 +144,9 @@ fun RestaurantCard(
                 Icon(
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Selection Icon",
-                    tint = DarkOrange,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.TopEnd)
-                        .size(16.dp)
-                        .border(2.dp, DarkOrange, CircleShape)
+                        .size(20.dp)
                 )
             }
             Column(
@@ -237,3 +174,20 @@ fun RestaurantCard(
         }
     }
 }
+
+
+@Composable
+fun DietaryPreferencePill(
+    preference: Diet,
+    isSelected: Boolean,
+    select: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FilterChip(
+        modifier = modifier,
+        selected = isSelected,
+        onClick = { select(!isSelected) },
+        label = { Text(text = preference.name) },
+    )
+}
+

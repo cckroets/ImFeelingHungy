@@ -20,7 +20,6 @@ fun NutritionalInformation.add(other: NutritionalInformation): NutritionalInform
     return NutritionalInformation(
         servingSize = this.servingSize,
         calories = this.calories?.plus(other.calories ?: 0),
-        caloriesFromFat = this.caloriesFromFat?.plus(other.caloriesFromFat ?: 0),
         carbohydrateContent = this.carbohydrateContent?.plus(other.carbohydrateContent ?: 0.0),
         cholesterolContent = this.cholesterolContent?.plus(other.cholesterolContent ?: 0.0),
         fatContent = this.fatContent?.plus(other.fatContent ?: 0.0),
@@ -52,7 +51,6 @@ data class Reason(
 data class NutritionalInformation(
     val servingSize: String?,
     val calories: Int?,
-    val caloriesFromFat: Int?,
     val carbohydrateContent: Double?,
     val cholesterolContent: Double?,
     val fatContent: Double?,

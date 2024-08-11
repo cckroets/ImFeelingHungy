@@ -21,13 +21,9 @@ fun SecondaryScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         modifier = modifier,
-        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                ),
+                colors = TopAppBarDefaults.topAppBarColors(),
                 title = { Text(text = title) },
                 scrollBehavior = scrollBehavior,
             )

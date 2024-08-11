@@ -7,9 +7,6 @@ import ckroetsch.imfeelinghungry.DIETARY_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.FOOD_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.RESTAURANT_PREFERENCES_KEY
 import ckroetsch.imfeelinghungry.isDataStoreEmpty
-import ckroetsch.imfeelinghungry.onboarding.Diet
-import ckroetsch.imfeelinghungry.onboarding.Food
-import ckroetsch.imfeelinghungry.onboarding.Restaurant
 import ckroetsch.imfeelinghungry.savePreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect

@@ -3,7 +3,6 @@ package ckroetsch.imfeelinghungry
 import ViewDiscoverItemScreen
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -11,8 +10,6 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
@@ -32,6 +29,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -44,6 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,22 +61,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ckroetsch.imfeelinghungry.data.MenuItem
 import ckroetsch.imfeelinghungry.data.PreferencesViewModel
 import ckroetsch.imfeelinghungry.data.Result
 import ckroetsch.imfeelinghungry.discover.DiscoverScreen
 import ckroetsch.imfeelinghungry.favorite.FavoriteScreen
 import ckroetsch.imfeelinghungry.onboarding.PreferencesScreen
-import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 import ckroetsch.imfeelinghungry.ui.theme.ImFeelingHungryTheme
-import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
-
-enum class Routes(val routes: String) {
-    WELCOME("welcome"),
-    RESTAURANT("preferences"),
-    FOOD("food"),
-    DIETARY_PREFERENCE("dietaryPreference"),
-    GENERATE_ORDER("generateOrder")
-}
 
 @Composable
 fun MainNavigation() {
@@ -89,17 +79,29 @@ fun MainNavigation() {
     ) { padding ->
         NavHost(
             navController = navController,
-            modifier = Modifier.background(MustardYellow).padding(padding),
+            modifier = Modifier.padding(padding),
             startDestination = startDestination
         ) {
-            composable("welcome") { WelcomeScreen(Modifier, navController) }
-            composable("preferences") { PreferencesScreen(viewModel = viewModel, navController = navController) }
-            composable("generateOrder") {
-                GeneratedOrderScreen(
-                    viewModel = viewModel,
-                    navController = navController,
-                )
+            composable("welcome") { WelcomeScreen(Modifier, viewModel, navController) }
+            composable("preferences") { PreferencesScreen(viewModel = viewModel) }
+            composable(
+                route = "generateOrder",
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Up,
+                        tween(300)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        tween(300)
+                    )
+                }
+            ) {
+                GeneratedOrderScreen(viewModel, navController)
             }
+
             composable(
                 route = "favorites",
                 enterTransition = {
@@ -159,32 +161,29 @@ fun MainNavigation() {
 
 @Composable
 fun GeneratedOrderScreen(
-    modifier: Modifier = Modifier,
     viewModel: PreferencesViewModel,
     navController: NavController
 ) {
-    val menuItem by viewModel.generatedMenuItem.collectAsState(Result.Loading)
-    LaunchedEffect(Unit) {
-        viewModel.generateMenuItem()
-    }
+    val goals = remember(viewModel) { viewModel.dietGoals }
+    var menuItem: MenuItem? by remember { mutableStateOf(null) }
 
-    Crossfade(menuItem) {
-        when (val m = it) {
-            is Result.Error -> {
-                Text(text = "Error: ${m.message}")
-            }
-            Result.Loading -> {
-                PhsyicsExample()
-                //LoadingAnimation(sharedElementScope, animatedVisibilityScope)
-            }
-            is Result.Success -> {
-                val goals = remember(viewModel) { viewModel.dietGoals }
-                MenuItemScreen(
-                    m.data,
-                    goals,
-                    navController,
-                    viewModel
-                ) { viewModel.regenerateWithInstructions(it) }
+    val newMenuItem by viewModel.generatedMenuItem.collectAsState(Result.None)
+    LaunchedEffect(newMenuItem) {
+        if (newMenuItem is Result.Success) {
+            menuItem = (newMenuItem as Result.Success).data
+        }
+    }
+    val isLoading = newMenuItem is Result.Loading
+    menuItem?.let {
+        MenuItemScreen(
+            it,
+            goals,
+            navController,
+            viewModel,
+            isLoading
+        ) {
+            if (!isLoading) {
+                viewModel.regenerateWithInstructions(it)
             }
         }
     }
@@ -194,13 +193,13 @@ fun GeneratedOrderScreen(
 @Composable
 fun HungryNavBar(navController: NavController) {
     NavigationBar(
-        containerColor = MustardYellow,
+        //containerColor = Purple4,
         tonalElevation = 24.dp,
     ) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         val isFavoritesSelected = currentRoute == "favorites"
         val isDiscoverSelected = currentRoute == "discover" || currentRoute?.contains("viewDiscoverItem") == true
-        val isHomeSelected = currentRoute == "welcome" || currentRoute == "preferences" || currentRoute == "generateOrder"
+        val isHomeSelected = currentRoute == "welcome" || currentRoute == "preferences" || currentRoute?.contains("generateOrder") == true
 
         HungryNavItem(
             selectedIcon = Icons.Filled.Favorite,
@@ -209,7 +208,9 @@ fun HungryNavBar(navController: NavController) {
             selected = isFavoritesSelected,
             // Navigate to favorites and clear back stack
             onClick = {
-                navController.navigate("favorites")
+                navController.navigate("favorites", NavOptions.Builder().apply {
+                    setLaunchSingleTop(true)
+                }.build())
             }
         )
         HungryNavItem(
@@ -219,7 +220,9 @@ fun HungryNavBar(navController: NavController) {
             selected = isHomeSelected,
             // Navigate to welcome and clear back stack
             onClick = {
-                navController.navigate("welcome")
+                navController.navigate("welcome", NavOptions.Builder().apply {
+                    setLaunchSingleTop(true)
+                }.build())
             }
         )
         HungryNavItem(
@@ -247,8 +250,8 @@ private fun RowScope.HungryNavItem(
             Icon(if (selected) selectedIcon else unselectedIcon, contentDescription = "Home")
         },
         colors = NavigationBarItemDefaults.colors(
-            indicatorColor = DarkOrange,
-            selectedIconColor = Color.White
+            //indicatorColor = DarkPurple,
+            //selectedIconColor = Color.White
         ),
         label = { Text(label) },
         selected = selected,
@@ -283,12 +286,17 @@ fun BottomNavigationBarPreview() {
 // Custom fab that allows for displaying extended content
 @Composable
 fun CustomFloatingActionButton(
-    isVisible: Boolean = true,
+    forceCollapse: Boolean = false,
     fabIcon: ImageVector,
     content: @Composable () -> Unit,
 ) {
-    var isExpanded = remember { mutableStateOf(false) }
+    val isExpanded = remember { mutableStateOf(false) }
     val offset = LocalDensity.current.run { IntOffset(0.dp.roundToPx(), -64.dp.roundToPx()) }
+    LaunchedEffect(forceCollapse) {
+        if (forceCollapse) {
+            isExpanded.value = false
+        }
+    }
 
     // Get current screen width
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp - 64.dp
@@ -304,8 +312,7 @@ fun CustomFloatingActionButton(
             Surface(
                 shape = shape,
                 shadowElevation = 6.dp,
-                color = DarkOrange,
-                contentColor = Color.White,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier
                     .widthIn(max = screenWidth)
                     .heightIn(min = 200.dp)
@@ -319,8 +326,7 @@ fun CustomFloatingActionButton(
             onClick = {
                 isExpanded.value = !isExpanded.value
             },
-            containerColor = DarkOrange,
-            contentColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
             elevation = elevation,
             modifier = Modifier.align(Alignment.BottomEnd),
             shape = shape
@@ -328,9 +334,7 @@ fun CustomFloatingActionButton(
             Icon(
                 imageVector = fabIcon,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(24.dp),
-                tint = Color.White
+                modifier = Modifier.size(24.dp),
             )
             AnimatedVisibility(
                 visible = isExpanded.value,

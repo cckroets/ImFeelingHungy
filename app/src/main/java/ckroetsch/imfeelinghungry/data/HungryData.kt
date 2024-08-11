@@ -1,31 +1,7 @@
-package ckroetsch.imfeelinghungry.onboarding
+package ckroetsch.imfeelinghungry.data
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ckroetsch.imfeelinghungry.R
-import ckroetsch.imfeelinghungry.data.NutritionMetric
-import ckroetsch.imfeelinghungry.data.NutritionalInformation
-import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
 
 data class Restaurant(
     val name: String,
@@ -201,56 +177,3 @@ val AllRestaurants = listOf(
     Restaurant("Five Guys", R.drawable.icons_fiveguys),
     Restaurant("In n Out", R.drawable.icons_innout),
 )
-
-
-@Composable
-fun OnboardingNavigator(
-    modifier: Modifier = Modifier,
-    navController: NavController,
-    nextPage: String,
-    prevPage: String = "welcome"
-) {
-    Card(colors = CardDefaults.outlinedCardColors(containerColor = Color.White)) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .background(Color.Transparent)
-
-
-        ) {
-            IconButton(
-                onClick = { navController.navigate(prevPage) },
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(22.dp)
-                        .scale(2f), // Scale up the icon,
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = DarkOrange
-                )
-            }
-
-            IconButton(
-                onClick = { navController.navigate(nextPage) },
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(22.dp)
-                        .scale(2f), // Scale up the icon,
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null,
-                    tint = DarkOrange
-                )
-            }
-        }
-    }
-}
-
-
-
-
-
-
-

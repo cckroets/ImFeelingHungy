@@ -1,223 +1,184 @@
 package ckroetsch.imfeelinghungry
 
-import android.graphics.Paint
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.foundation.Canvas
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.materialIcon
-import androidx.compose.material.icons.materialPath
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathFillType
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.rotationMatrix
-import ckroetsch.imfeelinghungry.ui.theme.DarkOrange
-import ckroetsch.imfeelinghungry.ui.theme.ImFeelingHungryTheme
-import ckroetsch.imfeelinghungry.ui.theme.MustardYellow
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
 
-@Composable
-fun VegetableTossAnimation() {
-    val vegetables = listOf("🥕", "🍆", "🌽", "🍅", "🥦")
-    val drawOrder = remember { vegetables.indices.shuffled() }
-    val heightAnimators = vegetables.map { remember { Animatable(initialValue = 0f) } }
-    val rotationAnimators = vegetables.map { remember { Animatable(initialValue = 0f) } }
-    val horizontalAnimators = vegetables.map { remember { Animatable(initialValue = 0f) } }
-    val rng = remember { Random(23L) }
-    val customEasing = CubicBezierEasing(0.33f, 0.0f, 0.67f, 1.0f)
+val DefaultEmojis = listOf("🍟", "\uD83C\uDF45", "🍔", "\uD83D\uDE0B", "🥦", "🥕", "\uD83D\uDCAA", "\uD83C\uDF0E", "\uD83E\uDD51", "\uD83C\uDF2F")
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            vegetables.forEachIndexed { index, _ ->
-                launch {
-                    horizontalAnimators[index].animateTo(
-                        targetValue = index * 1f,
-                        animationSpec = infiniteRepeatable(
-                            animation = keyframes {
-                                durationMillis = 1100
-                                0f at 0 with customEasing // Start
-                                index * 1f at 500 with customEasing // End
-                                index * 0.9f at 900 with customEasing // End
-                                0f * 1f at 1100 with customEasing // End
-                            },
-                            repeatMode = RepeatMode.Restart
-                        )
-                    )
-                }
-                launch {
-                    val direction = rng.nextBoolean().let { if (it) 1 else -1 }
-                    rotationAnimators[index].animateTo(
-                        targetValue = -10f,
-                        animationSpec = infiniteRepeatable(
-                            animation = keyframes {
-                                durationMillis = 1100
-                                -10f at 0 with customEasing // Start
-                                rng.nextInt(20, 70).toFloat() * direction at 500 with customEasing // End
-                                -10f at 1100 with customEasing // End
-                            },
-                            repeatMode = RepeatMode.Restart
-                        )
-                    )
-                }
-                launch {
-                    heightAnimators[index].animateTo(
-                        targetValue = 1f,
-                        animationSpec = infiniteRepeatable(
-                            animation = keyframes {
-                                durationMillis = 1100
-                                0f at 0 with customEasing // Start
-                                rng.nextInt(65, 100) / 100f at rng.nextInt(450, 550) with customEasing // Middle (top of the parabola)
-                                0f at 1000 with customEasing // End
-                                0f at 1100 with customEasing // End
-                            },
-                            repeatMode = RepeatMode.Restart
-                        )
-                    )
-                }
-            }
-            delay(1100) // Wait before restarting the animation
-        }
+enum class SlotMachineState {
+    Idle, Spinning, Settling
+}
+
+@Stable
+class SlotMachineController(
+    private val scope: CoroutineScope,
+    private val emojis: List<String>,
+) {
+    private val state = mutableStateOf(SlotMachineState.Idle)
+
+    val emoji1 = Animatable(initialValue = 4f)
+    val emoji2 = Animatable(initialValue = 1f)
+    val emoji3 = Animatable(initialValue = 8f)
+
+    fun spin() {
+        state.value = SlotMachineState.Spinning
+        scope.launch { delay(200); spinIndefinitely(emoji1, emojis.size) }
+        scope.launch { delay(600); spinIndefinitely(emoji2, emojis.size) }
+        scope.launch { delay(1000); spinIndefinitely(emoji3, emojis.size) }
     }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier.size(300.dp)) {
-            val panY = size.height / 2 + 100f
+    val isIdle get() = state.value == SlotMachineState.Idle
 
-            // Draw the frying pan
-            drawPan(topLeft = Offset(x = size.width / 2 - 60f, y = panY))
+    suspend fun stop() {
+        state.value = SlotMachineState.Settling
+        stopColumn(emoji1, emojis.size)
+        stopColumn(emoji2, emojis.size)
+        stopColumn(emoji3, emojis.size)
+        state.value = SlotMachineState.Idle
+    }
+}
 
-            // Draw vegetables as text
-            vegetables.forEachIndexed { i, vegetable ->
-                val index = drawOrder.indexOf(i)
-                val xOffset = (index - 2) * 120f
-                val yOffset = heightAnimators[index].value * -550f // Adjust the scale for parabolic effect
-                val pivot = Offset(x = size.width / 2 + xOffset, y = panY + yOffset)
-                    drawIntoCanvas {
-                        //translate(left = pivot.x, top = pivot.y) {
-                            rotate(rotationAnimators[index].value, pivot) {
-                                it.nativeCanvas.drawText(
-                                    vegetable,
-                                    pivot.x,
-                                    pivot.y,
-                                    Paint().apply {
-                                        color = androidx.compose.ui.graphics.Color.Black.toArgb()
-                                        textSize = 180f
-                                        textAlign = android.graphics.Paint.Align.CENTER
-                                        isAntiAlias = true
-                                    }
-                                )
-                            }
+@Composable
+fun rememberSlotMachineController(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    emojis: List<String> = DefaultEmojis
+) = remember { SlotMachineController(scope, emojis) }
 
-                        //}
+@Composable
+fun SlotMachine(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.background,
+    controller: SlotMachineController = rememberSlotMachineController(),
+    emojis: List<String> = DefaultEmojis,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(Modifier.wrapContentHeight()
+            .fillMaxWidth()
+            .requiredHeight(IntrinsicSize.Min)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color, RoundedCornerShape(16.dp))
+                    .drawWithContent {
+                        drawContent()
+                        drawRoundRect(
+                            brush = Brush.verticalGradient(listOf(color, color, Color.Transparent, Color.Transparent, Color.Transparent, Color.Transparent, Color.Transparent, color, color)),
+                            topLeft = Offset(0f, 0f),
+                            size = Size(size.width, size.height),
+                        )
                     }
-                }
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Display the emojis for each column
+                SlotColumn(emojiIndex = controller.emoji1.value, emojis = emojis)
+                SlotColumn(emojiIndex = controller.emoji2.value, emojis = emojis)
+                SlotColumn(emojiIndex = controller.emoji3.value, emojis = emojis)
             }
         }
+        Spacer(modifier = Modifier.height(32.dp))
+    }
 }
 
-fun DrawScope.drawPan(topLeft: Offset) {
-    val panWidth = 120f
-    val panHeight = 40f
-    val handleWidth = 60f
-    val handleHeight = 10f
-
-    // Draw pan body
-    drawRoundRect(
-        color = Color.DarkGray,
-        topLeft = topLeft,
-        size = Size(panWidth, panHeight),
-        cornerRadius = CornerRadius(10f, 10f)
-    )
-
-    // Draw handle
-    drawRoundRect(
-        color = Color.DarkGray,
-        topLeft = Offset(topLeft.x + panWidth, topLeft.y + panHeight / 4),
-        size = Size(handleWidth, handleHeight),
-        cornerRadius = CornerRadius(5f, 5f)
-    )
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun LoadingAnimation(
-    sharedElementScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-) {
-    with(sharedElementScope) {
-        Box(Modifier.fillMaxSize()) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
-            val sharedState = rememberSharedContentState("pan")
-            LottieAnimation(
-                composition = composition,
-                iterations = 100,
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = sharedState,
-                        //placeHolderSize = SharedTransitionScope.PlaceHolderSize(),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
+fun SlotColumn(emojiIndex: Float, emojis: List<String>) {
+    // Calculate the three emojis to display based on the animated value
+    val index = emojiIndex.toInt()
+    val offset = emojiIndex - index
+    Column(
+        modifier = Modifier
+            .sizeIn(maxHeight = 192.dp)
+            .clipToBounds()
+            .wrapContentHeight(unbounded = true, align = Alignment.CenterVertically)
+            .padding(horizontal = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        repeat(5) { i ->
+            Text(
+                text = emojis[(index + i) % emojis.size],
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.requiredHeight(64.dp).offset(y = (-offset * 64).dp)
             )
         }
     }
+}
+
+suspend fun spinIndefinitely(animatable: Animatable<Float, AnimationVector1D>, itemCount: Int) {
+    while (true) {
+        animatable.animateTo(
+            targetValue = animatable.value + itemCount,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 400,
+                    easing = LinearEasing
+                )
+            )
+        )
+    }
+}
+
+suspend fun stopColumn(animatable: Animatable<Float, AnimationVector1D>, itemCount: Int) {
+    if (!animatable.isRunning) return
+    animatable.stop()
+    val targetIndex = Random.nextInt(itemCount)
+    val targetValue = animatable.value.toInt() + itemCount + targetIndex
+    val individualDuration = 400f / itemCount
+    val totalDuration = individualDuration * (targetIndex + itemCount)
+    animatable.animateTo(
+        targetValue = targetValue.toFloat(),
+        animationSpec = tween(
+            durationMillis = totalDuration.toInt(),
+            easing = FastOutSlowInEasing
+        )
+    )
+    animatable.snapTo(targetValue.toFloat())
 }

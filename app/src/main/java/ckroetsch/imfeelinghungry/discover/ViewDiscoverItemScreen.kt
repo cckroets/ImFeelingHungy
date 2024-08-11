@@ -29,9 +29,7 @@ fun ViewDiscoverItemScreen(
             menuItem = it,
             goals = goals,
             navController = navController
-        ) { suggestion ->
-            viewModel.regenerateWithInstructions(suggestion)
-        }
+        )
     } ?: run {
         // If menuItem is null, show an error message
         Text("Error: Invalid menu item data.")
